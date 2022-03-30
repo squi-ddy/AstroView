@@ -1,6 +1,6 @@
 package com.example.astroview.stars
 
-import com.example.astroview.math.Vector3D
+import com.example.astroview.math.Vec3
 
 abstract class Star {
     abstract val x0: Int
@@ -10,5 +10,5 @@ abstract class Star {
     abstract val mag: Int
     abstract val bV: Int
 
-    abstract val j2KPos: Vector3D
+    abstract val j2KPos: Vec3
 }
