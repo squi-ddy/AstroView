@@ -1,6 +1,6 @@
 package com.example.astroview.util
 
-class Triple<T>(val v0: T, val v1: T, val v2: T) {
+class ArrayTriple<T>(private val v0: T, private val v1: T, private val v2: T) {
     operator fun get(index: Int): T {
         return when (index) {
             0 -> v0

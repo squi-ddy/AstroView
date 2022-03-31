@@ -35,7 +35,7 @@ class Star3(bytes: ByteArray): Star() {
         bytes[5].toUInt().shr(3).toInt()
     }
 
-    override fun getJ2KPos(z: ZoneData, movementFactor: Double): Vec3 {
+    override fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3 {
         var pos = z.axis0
         pos *= x0
         pos += z.center

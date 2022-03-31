@@ -42,4 +42,8 @@ class Vec3(vx: Number, vy: Number, vz: Number) {
     fun norm(): Vec3 {
         return Vec3(x / mag, y / mag, z / mag)
     }
+
+    override fun toString(): String {
+        return "($x, $y, $z)"
+    }
 }

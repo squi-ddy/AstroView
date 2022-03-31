@@ -8,5 +8,5 @@ abstract class Star {
     abstract val mag: Int
     abstract val bV: Int
 
-    abstract fun getJ2KPos(z: ZoneData, movementFactor: Double): Vec3
+    abstract fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3
 }

@@ -1,7 +1,9 @@
 package com.example.astroview.stars
 
+import com.example.astroview.core.AstroTime
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
 import kotlin.properties.Delegates
@@ -11,7 +13,7 @@ class ZoneArray(val zones: Array<ZoneData>) {
 
     companion object {
         val north = Vec3(0, 0, 1)
-        val d2K = 2451545
+        val d2k = 2451545
     }
 
     fun initTriangle(index: Int, t: Triangle) {
@@ -31,7 +33,16 @@ class ZoneArray(val zones: Array<ZoneData>) {
         }
     }
 
-    fun searchAround() {
-
+    fun searchAround(index: Int, v: Vec3, cosLimFov: Double): ArrayList<Star> {
+        val movementFactor = (PI / 180) * (0.0001 / 3600) * ((AstroTime.getJDE() - d2k) / 365.25) / starPositionScale
+        val z = zones[index]
+        val result = arrayListOf<Star>()
+        for (star in z.stars) {
+            val starVec = star.getJ2kPos(z, movementFactor).norm()
+            if (starVec.dot(v) >= cosLimFov) {
+                result.add(star)
+            }
+        }
+        return result
     }
 }
