@@ -1,5 +1,7 @@
 package com.example.astroview.stars
 
+import com.example.astroview.math.Vec3
+
 class Star2(bytes: ByteArray) : Star() {
     /*
               _______________
@@ -16,6 +18,10 @@ class Star2(bytes: ByteArray) : Star() {
 
     */
 
+    companion object {
+        const val byteCount = 10
+    }
+
     override val x0 by lazy {
         bytes[0].toUInt().or(bytes[1].toUInt().shl(8)).or(bytes[2].toUInt().and(0xFu).shl(16))
             .toInt()
@@ -25,11 +31,11 @@ class Star2(bytes: ByteArray) : Star() {
         bytes[2].toUInt().shr(4).or(bytes[3].toUInt().shl(4)).or(bytes[4].toUInt().shl(12)).toInt()
     }
 
-    override val dx0 by lazy {
+    val dx0 by lazy {
         bytes[5].toUInt().or(bytes[6].toUInt().and(0x3Fu).shl(8)).toInt()
     }
 
-    override val dx1 by lazy {
+    val dx1 by lazy {
         bytes[6].toUInt().shr(6).or(bytes[7].toUInt().shl(2)).or(bytes[8].toUInt().and(0xFu))
             .toInt()
     }
@@ -43,8 +49,16 @@ class Star2(bytes: ByteArray) : Star() {
     }
 
     init {
-        if (bytes.size != 10) {
+        if (bytes.size != byteCount) {
             throw IllegalArgumentException("Invalid size")
         }
+    }
+
+    override fun getJ2KPos(z: ZoneData, movementFactor: Double): Vec3 {
+        var pos = z.axis0
+        pos *= x0 + movementFactor * dx0
+        pos += z.axis1 * (x1 + movementFactor * dx1)
+        pos += z.center
+        return pos
     }
 }

@@ -1,5 +1,6 @@
 package com.example.astroview.math
 
+import com.example.astroview.util.Triple
 import kotlin.math.sqrt
 
 class IcosahedronGrid(private val maxLevel: Int) {

@@ -1,7 +1,6 @@
-package com.example.astroview.math
+package com.example.astroview.util
 
 class Triple<T>(val v0: T, val v1: T, val v2: T) {
-
     operator fun get(index: Int): T {
         return when (index) {
             0 -> v0

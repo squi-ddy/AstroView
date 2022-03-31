@@ -1,8 +1,9 @@
 package com.example.astroview.stars
 
 import android.util.Log
+import com.example.astroview.util.ByteConverter
+import com.example.astroview.util.StarUtils
 import java.io.InputStream
-import java.lang.IllegalStateException
 
 class CatalogueReader(private val stream: InputStream) {
     private var isLittleEndian = false
@@ -14,10 +15,10 @@ class CatalogueReader(private val stream: InputStream) {
         private const val FILE_MAGIC_NATIVE = 0x835f040bL
     }
 
-    fun read() {
+    fun read(): ZoneArray {
         val bytes = ByteArray(4)
         stream.read(bytes)
-        magic = Helper.bytesToInt(bytes, isLittleEndian)
+        magic = ByteConverter.bytesToInt(bytes, isLittleEndian)
 
         when (magic) {
             FILE_MAGIC -> isLittleEndian = false
@@ -31,9 +32,9 @@ class CatalogueReader(private val stream: InputStream) {
         for (i in 1 until 8) {
             stream.read(bytes)
             params[i] = if (i < 4) {
-                Helper.bytesToInt(bytes, isLittleEndian)
+                ByteConverter.bytesToInt(bytes, isLittleEndian)
             } else {
-                Helper.bytesToInt(bytes, isLittleEndian).toUInt().toInt().toLong()
+                ByteConverter.bytesToInt(bytes, isLittleEndian).toUInt().toInt().toLong()
             }
         }
 
@@ -42,23 +43,15 @@ class CatalogueReader(private val stream: InputStream) {
 
         for (i in zoneSizes.indices) {
             stream.read(bytes)
-            zoneSizes[i] = Helper.bytesToInt(bytes, isLittleEndian).toInt()
+            zoneSizes[i] = ByteConverter.bytesToInt(bytes, isLittleEndian).toInt()
         }
 
         val zones = Array(zoneCount) { i ->
-            val starBytes = ByteArray(when (params[1]) {
-                0L -> 28
-                1L -> 10
-                else -> throw IllegalStateException("Invalid star type")
-            })
+            val starBytes = ByteArray(StarUtils.getByteCount(params[1]))
             ZoneData(
                 Array(zoneSizes[i]) {
                     stream.read(starBytes)
-                    when(params[1]) {
-                        0L -> Star1(starBytes)
-                        1L -> Star2(starBytes)
-                        else -> throw IllegalStateException("Invalid star type")
-                    }
+                    StarUtils.createStar(starBytes)
                 },
                 zoneSizes[i]
             )
@@ -67,5 +60,7 @@ class CatalogueReader(private val stream: InputStream) {
         Log.e("Cat File Read", params.asList().toString())
 
         stream.close()
+
+        return ZoneArray(zones)
     }
 }
