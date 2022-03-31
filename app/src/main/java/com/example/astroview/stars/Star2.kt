@@ -20,6 +20,7 @@ class Star2(bytes: ByteArray) : Star() {
 
     companion object {
         const val byteCount = 10
+        const val maxPosVal = 0x7FFFF
     }
 
     override val x0 by lazy {

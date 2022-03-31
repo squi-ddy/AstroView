@@ -3,6 +3,7 @@ package com.example.astroview.stars
 import com.example.astroview.astro.AstroTime
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
+import com.example.astroview.util.StarUtils
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -43,5 +44,13 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
             }
         }
         return result
+    }
+
+    fun scaleAxis() {
+        starPositionScale /= StarUtils.getMaxPosVal(zones[0].stars[0])
+        for (z in zones.reversed()) {
+            z.axis0 *= starPositionScale
+            z.axis1 *= starPositionScale
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.example.astroview.util.ArrayTriple
 import kotlin.math.max
 import kotlin.math.sqrt
 
-class IcosahedronGrid(val maxLevel: Int) {
+class GeodesicGrid(val maxLevel: Int) {
     // Create a sphere by subdividing the icosahedron.
     // Step 1. Create an icosahedron;
     // Step 2. Subdivide icosahedron faces into triangles;

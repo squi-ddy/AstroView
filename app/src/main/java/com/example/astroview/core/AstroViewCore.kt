@@ -1,16 +1,16 @@
 package com.example.astroview.core
 
-import com.example.astroview.projection.IcosahedronGrid
+import com.example.astroview.projection.GeodesicGrid
 
 object AstroViewCore {
-    private var geodesicGrid: IcosahedronGrid? = null
+    private var geodesicGrid: GeodesicGrid? = null
 
-    fun getGeodesicGrid(maxLevel: Int): IcosahedronGrid {
+    fun getGeodesicGrid(maxLevel: Int): GeodesicGrid {
         var currentGrid = geodesicGrid
         if (currentGrid == null) {
-            currentGrid = IcosahedronGrid(maxLevel)
+            currentGrid = GeodesicGrid(maxLevel)
         } else if (currentGrid.maxLevel < maxLevel) {
-            currentGrid = IcosahedronGrid(maxLevel)
+            currentGrid = GeodesicGrid(maxLevel)
         }
         geodesicGrid = currentGrid
         return currentGrid

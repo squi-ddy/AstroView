@@ -1,9 +1,6 @@
 package com.example.astroview.util
 
-import com.example.astroview.stars.Star
-import com.example.astroview.stars.Star1
-import com.example.astroview.stars.Star2
-import com.example.astroview.stars.Star3
+import com.example.astroview.stars.*
 
 object StarUtils {
     const val noStarTypes = 3
@@ -32,7 +29,16 @@ object StarUtils {
             Star1.byteCount -> createStar(0L, bytes)
             Star2.byteCount -> createStar(1L, bytes)
             Star3.byteCount -> createStar(2L, bytes)
-            else -> throw IllegalArgumentException("No star with $bytes bytes")
+            else -> throw IllegalArgumentException("No star with ${bytes.size} bytes")
+        }
+    }
+
+    fun getMaxPosVal(star: Star): Int {
+        return when (star) {
+            is Star1 -> Star1.maxPosVal
+            is Star2 -> Star2.maxPosVal
+            is Star3 -> Star3.maxPosVal
+            else -> throw IllegalArgumentException("Unknown star type")
         }
     }
 }

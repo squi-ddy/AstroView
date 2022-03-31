@@ -40,6 +40,7 @@ class Star1(bytes: ByteArray) : Star() {
 
     companion object {
         const val byteCount = 28
+        const val maxPosVal = 0x7FFFFFFF
     }
 
     val hip by lazy {

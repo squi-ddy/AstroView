@@ -34,6 +34,10 @@ class StarManager(private val context: Context) {
         }
 
         AstroViewCore.getGeodesicGrid(gridLevels.size).visitTriangles(gridLevels.size, this)
+
+        for (z in gridLevels) {
+            z.scaleAxis()
+        }
     }
 
     fun initTriangle(level: Int, index: Int, t: Triangle) {
