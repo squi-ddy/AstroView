@@ -1,4 +1,4 @@
-package com.example.astroview.core
+package com.example.astroview.astro
 
 import android.icu.util.Calendar
 import android.icu.util.TimeZone

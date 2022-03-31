@@ -1,10 +1,13 @@
-package com.example.astroview.math
+package com.example.astroview.projection
 
+import com.example.astroview.math.Triangle
+import com.example.astroview.math.Vec3
+import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
-import java.lang.IllegalStateException
+import kotlin.math.max
 import kotlin.math.sqrt
 
-class IcosahedronGrid(private val maxLevel: Int) {
+class IcosahedronGrid(val maxLevel: Int) {
     // Create a sphere by subdividing the icosahedron.
     // Step 1. Create an icosahedron;
     // Step 2. Subdivide icosahedron faces into triangles;
@@ -146,5 +149,40 @@ class IcosahedronGrid(private val maxLevel: Int) {
             i++
         }
         throw IllegalStateException("Zone not found for point $v")
+    }
+
+    fun visitTriangles(maxVisLevel: Int, context: StarManager) {
+        val maxVisitLevel = max(maxVisLevel, maxLevel)
+        for (i in 0 until 20) {
+            val corners = icosahedronTriangles[i]
+            visitTriangles(
+                0, i, Triangle(
+                    icosahedronCorners[corners[0]],
+                    icosahedronCorners[corners[1]],
+                    icosahedronCorners[corners[2]]
+                ), maxVisitLevel, context
+            )
+        }
+    }
+
+    fun visitTriangles(
+        level: Int,
+        index: Int,
+        t: Triangle,
+        maxVisLevel: Int,
+        context: StarManager
+    ) {
+        context.initTriangle(level, index, t)
+        var lev = level
+        var i = index
+        val nextT = triangles[lev][index]
+        lev++
+        if (lev < maxVisLevel) {
+            i *= 4
+            visitTriangles(lev, i + 0, Triangle(t.c0, nextT.c2, nextT.c1), maxVisLevel, context)
+            visitTriangles(lev, i + 1, Triangle(nextT.c2, t.c1, nextT.c0), maxVisLevel, context)
+            visitTriangles(lev, i + 2, Triangle(nextT.c1, nextT.c0, t.c2), maxVisLevel, context)
+            visitTriangles(lev, i + 3, nextT, maxVisLevel, context)
+        }
     }
 }

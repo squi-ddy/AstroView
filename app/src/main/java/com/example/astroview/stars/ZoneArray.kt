@@ -1,15 +1,14 @@
 package com.example.astroview.stars
 
-import com.example.astroview.core.AstroTime
+import com.example.astroview.astro.AstroTime
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
-import kotlin.properties.Delegates
 
-class ZoneArray(val zones: Array<ZoneData>) {
-    var starPositionScale by Delegates.notNull<Double>()
+class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
+    var starPositionScale = 0.0
 
     companion object {
         val north = Vec3(0, 0, 1)

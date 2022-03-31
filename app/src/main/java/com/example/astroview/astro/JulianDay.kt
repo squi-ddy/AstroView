@@ -1,4 +1,4 @@
-package com.example.astroview.core
+package com.example.astroview.astro
 
 data class JulianDay(
     var date: Double,

@@ -61,6 +61,6 @@ class CatalogueReader(private val stream: InputStream) {
 
         stream.close()
 
-        return ZoneArray(zones)
+        return ZoneArray(zones, params[4].toInt())
     }
 }
