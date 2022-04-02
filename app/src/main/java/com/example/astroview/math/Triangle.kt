@@ -9,9 +9,9 @@ class Triangle(
 ) {
     companion object {
         val NULL = Triangle(
-            Vec3(0, 0, 0),
-            Vec3(0, 0, 0),
-            Vec3(0, 0, 0)
+            Vec3.fromXYZ(0, 0, 0),
+            Vec3.fromXYZ(0, 0, 0),
+            Vec3.fromXYZ(0, 0, 0)
         )
     }
 

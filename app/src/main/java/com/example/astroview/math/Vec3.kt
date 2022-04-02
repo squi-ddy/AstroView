@@ -1,11 +1,25 @@
 package com.example.astroview.math
 
-import kotlin.math.sqrt
+import kotlin.math.*
 
-class Vec3(vx: Number, vy: Number, vz: Number) {
+class Vec3 private constructor(vx: Number, vy: Number, vz: Number) {
     val x = vx.toDouble()
     val y = vy.toDouble()
     val z = vz.toDouble()
+
+    companion object {
+        fun fromXYZ(x: Number, y: Number, z: Number): Vec3 {
+            return Vec3(x, y, z)
+        }
+
+        fun fromSpherical(r: Number, theta: Number, phi: Number): Vec3 {
+            return Vec3(
+                r.toDouble() * cos(phi.toDouble()) * sin(theta.toDouble()),
+                r.toDouble() * sin(phi.toDouble()) * cos(theta.toDouble()),
+                r.toDouble() * cos(theta.toDouble())
+            )
+        }
+    }
 
     val magSquared by lazy {
         x * x + y * y + z * z

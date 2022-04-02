@@ -1,6 +1,6 @@
 package com.example.astroview.stars
 
-import com.example.astroview.astro.AstroTime
+import com.example.astroview.astro.Time
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
 import com.example.astroview.util.StarUtils
@@ -12,7 +12,7 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
     var starPositionScale = 0.0
 
     companion object {
-        val north = Vec3(0, 0, 1)
+        val north = Vec3.fromXYZ(0, 0, 1)
         val d2k = 2451545
     }
 
@@ -34,7 +34,7 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
     }
 
     fun searchAround(index: Int, v: Vec3, cosLimFov: Double): ArrayList<Star> {
-        val movementFactor = (PI / 180) * (0.0001 / 3600) * ((AstroTime.getJDE() - d2k) / 365.25) / starPositionScale
+        val movementFactor = (PI / 180) * (0.0001 / 3600) * ((Time.getJDE() - d2k) / 365.25) / starPositionScale
         val z = zones[index]
         val result = arrayListOf<Star>()
         for (star in z.stars) {

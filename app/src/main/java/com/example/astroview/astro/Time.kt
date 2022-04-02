@@ -6,12 +6,14 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.JulianFields
 import java.util.*
+import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.round
 
 
-object AstroTime {
-    lateinit var currentTime: JulianDay
+object Time {
+    private lateinit var currentTime: JulianDay
 
     fun getJDFromSystem(): Calendar {
         return Calendar.getInstance(TimeZone.GMT_ZONE)
@@ -25,28 +27,48 @@ object AstroTime {
     fun JDToCalendar(jd: Double): Calendar {
         val julianDay = floor(jd + 0.5).toLong()
         val julianTime = round((jd + 0.5 - julianDay) * (24 * 60 * 60 * 1000)).toLong()
-        val dateTime = LocalDateTime.MIN.with(JulianFields.JULIAN_DAY, julianDay).plusNanos(julianTime * 1000)
+        val dateTime =
+            LocalDateTime.MIN.with(JulianFields.JULIAN_DAY, julianDay).plusNanos(julianTime * 1000)
         val date = Date.from(dateTime.toInstant(ZoneOffset.UTC))
         val calendar = Calendar.getInstance(TimeZone.GMT_ZONE)
         calendar.time = date
         return calendar
     }
 
+    /**
+     * Set current time in UTC.
+     */
     fun setJD(jd: Calendar) {
         currentTime.date = calendarToJD(jd)
         currentTime.deltaT = computeDeltaT(jd)
     }
 
+    /**
+     * Set current time in Terrestrial Time (TT).
+     */
     fun setJDE(newJDE: Calendar) {
         currentTime.deltaT = computeDeltaT(newJDE)
         currentTime.date = calendarToJD(newJDE) - currentTime.deltaT / 86400
         // resetSync()
     }
 
+    /**
+     * Set current time via Julian representation of Terrestrial Time (TT).
+     */
     fun setJDE(newJDE: Double) {
         setJDE(JDToCalendar(newJDE))
     }
 
+    /**
+     * Get current time in UTC.
+     */
+    fun getJD(): Double {
+        return currentTime.date
+    }
+
+    /**
+     * Get current Terrestrial Time (TT).
+     */
     fun getJDE(): Double {
         return currentTime.date + currentTime.deltaT / 86400
     }
@@ -56,12 +78,16 @@ object AstroTime {
         // TODO: Moon stuff
     }
 
-    // Get DeltaT via Espenak & Meeus (2006)
-
-    // Note: the method here is adapted from
-    // "Five Millennium Canon of Solar Eclipses" [Espenak and Meeus, 2006]
-    // A summary is described here:
-    // http://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html
+    /** Get Delta-T via Espenak & Meeus (2006).
+     *
+     * Note: the method here is adapted from
+     *"Five Millennium Canon of Solar Eclipses" (Espenak and Meeus, 2006)
+     *
+     * A summary is described [here][http://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html].
+     *
+     * @param jd Julian day in UTC (in a calendar object because funny)
+     *
+     */
     fun getDeltaT(jd: Calendar): Double {
         val year = jd.get(Calendar.YEAR)
         val month = jd.get(Calendar.MONTH)
@@ -166,5 +192,52 @@ object AstroTime {
         } else {
             return (year % 4 == 0)
         }
+    }
+
+    /**
+     * Limits a large angle, outside of [0..360), to within that range.
+     * @param d Angle to limit
+     */
+    fun rangeDegrees(d: Double): Double {
+        return d.mod(360.0)
+    }
+
+    /** Returns sidereal time *in degrees*, ignoring precession and nutation.
+     * @param jd Julian day in UTC
+     * @param jde Julian day in TT
+     * @see getApparentSiderealTime
+     */
+    fun getMeanSiderealTime(jd: Double, jde: Double): Double {
+        val ut1 = (jd - floor(jd) + 0.5) * 86400
+        val t = (jde - 2451545.0) / 36525.0
+        val tu = (jd - 2451545.0) / 36525.0
+
+        var sidereal =
+            (((-0.000000002454 * t - 0.00000199708) * t - 0.0000002926) * t + 0.092772110) * t * t
+        sidereal += (t - tu) * 307.4771013
+        sidereal += 8640184.79447825 * tu + 24110.5493771
+        sidereal += ut1
+
+        sidereal *= 1.0 / 240
+
+        sidereal = rangeDegrees(sidereal)
+
+        return sidereal
+    }
+
+    /** Returns sidereal time *in degrees*, with precession and nutation.
+     * @param jd Julian day in UTC
+     * @param jde Julian day in TT
+     * @see getMeanSiderealTime
+     */
+    fun getApparentSiderealTime(jd: Double, jde: Double): Double {
+        val meanSidereal = getMeanSiderealTime(jd, jde)
+
+        // add corrections for nutation in longitude and for the true obliquity of the ecliptic
+        val angles = Precession.getNutationAngles(jde)
+        val deltaPsi = angles.deltaPsi
+        val deltaEps = angles.deltaEpsilon
+
+        return meanSidereal + (deltaPsi * cos(Precession.getPrecessionAnglesVondrak(jde).epsilonA + deltaEps)) * 180 / PI
     }
 }
