@@ -2,6 +2,7 @@ package com.example.astroview.projection
 
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
+import com.example.astroview.stars.AltAzStar
 import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
 import kotlin.math.max
@@ -22,18 +23,18 @@ class GeodesicGrid(val maxLevel: Int) {
 
         private val icosahedronCorners =
             arrayOf(
-                Vec3(icosahedronA, -icosahedronB, 0),
-                Vec3(icosahedronA, icosahedronB, 0),
-                Vec3(-icosahedronA, icosahedronB, 0),
-                Vec3(-icosahedronA, -icosahedronB, 0),
-                Vec3(0, icosahedronA, -icosahedronB),
-                Vec3(0, icosahedronA, icosahedronB),
-                Vec3(0, -icosahedronA, icosahedronB),
-                Vec3(0, -icosahedronA, -icosahedronB),
-                Vec3(-icosahedronB, 0, icosahedronA),
-                Vec3(icosahedronB, 0, icosahedronA),
-                Vec3(icosahedronB, 0, -icosahedronA),
-                Vec3(-icosahedronB, 0, -icosahedronA)
+                Vec3.fromXYZ(icosahedronA, -icosahedronB, 0),
+                Vec3.fromXYZ(icosahedronA, icosahedronB, 0),
+                Vec3.fromXYZ(-icosahedronA, icosahedronB, 0),
+                Vec3.fromXYZ(-icosahedronA, -icosahedronB, 0),
+                Vec3.fromXYZ(0, icosahedronA, -icosahedronB),
+                Vec3.fromXYZ(0, icosahedronA, icosahedronB),
+                Vec3.fromXYZ(0, -icosahedronA, icosahedronB),
+                Vec3.fromXYZ(0, -icosahedronA, -icosahedronB),
+                Vec3.fromXYZ(-icosahedronB, 0, icosahedronA),
+                Vec3.fromXYZ(icosahedronB, 0, icosahedronA),
+                Vec3.fromXYZ(icosahedronB, 0, -icosahedronA),
+                Vec3.fromXYZ(-icosahedronB, 0, -icosahedronA)
             )
 
         // Stores triangles based on which corners they are connected to.
@@ -125,6 +126,12 @@ class GeodesicGrid(val maxLevel: Int) {
         }
     }
 
+    /**
+     * Get the zone index for a point at a specified level.
+     * @param v Point to find zone for
+     * @param searchLevel Level to find zone for
+     * @return Zone that this vector belongs in
+     */
     fun getZoneNumberForPoint(v: Vec3, searchLevel: Int): Int {
         var i = 0
         while (i < 20) {
@@ -184,5 +191,37 @@ class GeodesicGrid(val maxLevel: Int) {
             visitTriangles(lev, i + 2, Triangle(nextT.c1, nextT.c0, t.c2), maxVisLevel, context)
             visitTriangles(lev, i + 3, nextT, maxVisLevel, context)
         }
+    }
+
+    fun searchAround(maxVisLevel: Int, v: Vec3, cosLimFov: Double, context: StarManager): Set<AltAzStar> {
+        // TODO: Don't recursively call this function; find the zone first
+        val maxVisitLevel = max(maxVisLevel, maxLevel)
+        val stars = mutableSetOf<AltAzStar>()
+        for (i in 0 until 20) {
+            stars.addAll(searchAround(0, i, v, cosLimFov, maxVisitLevel, context))
+        }
+        return stars
+    }
+
+    fun searchAround(
+        level: Int,
+        index: Int,
+        v: Vec3,
+        cosLimFov: Double,
+        maxVisLevel: Int,
+        context: StarManager
+    ): Set<AltAzStar> {
+        val stars = context.searchAround(level, index, v, cosLimFov).toMutableSet()
+        var lev = level
+        var i = index
+        lev++
+        if (lev < maxVisLevel) {
+            i *= 4
+            stars.addAll(searchAround(lev, i + 0, v, cosLimFov, maxVisLevel, context))
+            stars.addAll(searchAround(lev, i + 1, v, cosLimFov, maxVisLevel, context))
+            stars.addAll(searchAround(lev, i + 2, v, cosLimFov, maxVisLevel, context))
+            stars.addAll(searchAround(lev, i + 3, v, cosLimFov, maxVisLevel, context))
+        }
+        return stars
     }
 }

@@ -13,10 +13,13 @@ import kotlin.math.round
 
 
 object Time {
-    private lateinit var currentTime: JulianDay
+    private val currentTime = JulianDay(-1e100, -1e100)
 
-    fun getJDFromSystem(): Calendar {
-        return Calendar.getInstance(TimeZone.GMT_ZONE)
+    /**
+     * Set the current Julian Day to the internal time.
+     */
+    fun setJDFromSystem() {
+        setJD(Calendar.getInstance(TimeZone.GMT_ZONE))
     }
 
     fun calendarToJD(jd: Calendar): Double {
@@ -182,15 +185,15 @@ object Time {
     }
 
     fun isLeapYear(year: Int): Boolean {
-        if (year > 1582) {
+        return if (year > 1582) {
             // Switch from Gregorian to Julian
             if (year % 100 == 0) {
-                return (year % 400 == 0)
+                year % 400 == 0
             } else {
-                return (year % 4 == 0)
+                year % 4 == 0
             }
         } else {
-            return (year % 4 == 0)
+            year % 4 == 0
         }
     }
 

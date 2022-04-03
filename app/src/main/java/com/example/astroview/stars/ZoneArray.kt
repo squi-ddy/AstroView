@@ -1,5 +1,7 @@
 package com.example.astroview.stars
 
+import android.util.Log
+import com.example.astroview.astro.Coordinates
 import com.example.astroview.astro.Time
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
@@ -13,7 +15,7 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
 
     companion object {
         val north = Vec3.fromXYZ(0, 0, 1)
-        val d2k = 2451545
+        val d2k = 2451545.0
     }
 
     fun initTriangle(index: Int, t: Triangle) {
@@ -33,14 +35,22 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
         }
     }
 
-    fun searchAround(index: Int, v: Vec3, cosLimFov: Double): ArrayList<Star> {
+    /**
+     * Search around an Alt-Az vector for stars.
+     * @param index Zone to search
+     * @param v Alt-Az vector
+     * @param cosLimFov Fov limit: if the dot product is greater than this, the star is returned.
+     */
+    fun searchAround(index: Int, v: Vec3, cosLimFov: Double): Set<AltAzStar> {
         val movementFactor = (PI / 180) * (0.0001 / 3600) * ((Time.getJDE() - d2k) / 365.25) / starPositionScale
         val z = zones[index]
-        val result = arrayListOf<Star>()
+        val result = mutableSetOf<AltAzStar>()
+        Log.e("sus", z.stars.size.toString())
         for (star in z.stars) {
             val starVec = star.getJ2kPos(z, movementFactor).norm()
-            if (starVec.dot(v) >= cosLimFov) {
-                result.add(star)
+            val starAltAz = (Coordinates.matJ2kToAltAz * starVec).norm()
+            if (starAltAz.dot(v) >= cosLimFov) {
+                result.add(AltAzStar(star, starAltAz))
             }
         }
         return result

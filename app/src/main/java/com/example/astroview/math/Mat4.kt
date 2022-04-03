@@ -3,6 +3,11 @@ package com.example.astroview.math
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * A 4x4 square matrix, representing vector transformations.
+ * @see Vec4
+ * @property r A 16-length array representing the values in the matrix.
+ */
 class Mat4(
     m00: Number, m01: Number, m02: Number, m03: Number,
     m10: Number, m11: Number, m12: Number, m13: Number,
@@ -24,6 +29,10 @@ class Mat4(
     )
 
     companion object {
+        /**
+         * Returns a [Mat4] object that rotates about the X axis.
+         * @param angle Angle, in radians, to rotate.
+         */
         fun rotationX(angle: Number): Mat4 {
             val c = cos(angle.toDouble())
             val s = sin(angle.toDouble())
@@ -36,6 +45,10 @@ class Mat4(
             )
         }
 
+        /**
+         * Returns a [Mat4] object that rotates about the Y axis.
+         * @param angle Angle, in radians, to rotate.
+         */
         fun rotationY(angle: Number): Mat4 {
             val c = cos(angle.toDouble())
             val s = sin(angle.toDouble())
@@ -48,6 +61,10 @@ class Mat4(
             )
         }
 
+        /**
+         * Returns a [Mat4] object that rotates about the Z axis.
+         * @param angle Angle, in radians, to rotate.
+         */
         fun rotationZ(angle: Number): Mat4 {
             val c = cos(angle.toDouble())
             val s = sin(angle.toDouble())
@@ -55,6 +72,18 @@ class Mat4(
             return Mat4(
                 c, s, 0, 0,
                 -s, c, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            )
+        }
+
+        /**
+         * Returns a [Mat4] object that represents an identity matrix.
+         */
+        fun identity(): Mat4 {
+            return Mat4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1
             )
@@ -71,6 +100,14 @@ class Mat4(
             r[1] * v.x + r[5] * v.y + r[9] * v.z + r[13] * v.w,
             r[2] * v.x + r[6] * v.y + r[10] * v.z + r[14] * v.w,
             1
+        )
+    }
+
+    operator fun times(v: Vec3): Vec3 {
+        return Vec3.fromXYZ(
+            r[0] * v.x + r[4] * v.y + r[8] * v.z + r[12],
+            r[1] * v.x + r[5] * v.y + r[9] * v.z + r[13],
+            r[2] * v.x + r[6] * v.y + r[10] * v.z + r[14]
         )
     }
 
