@@ -11,7 +11,7 @@ import com.example.astroview.math.Vec3
  */
 class OrientationData(val azimuth: Float, val pitch: Float, val roll: Float) {
     companion object {
-        val DOWN = Vec3.fromXYZ(0, -1, 0) // Default viewport
+        val DOWN = Vec3.fromXYZ(0, 0, -1) // Default viewport
     }
 
     /**
@@ -20,6 +20,6 @@ class OrientationData(val azimuth: Float, val pitch: Float, val roll: Float) {
      * @return A rectangular [Vec3] for the phone's orientation.
      */
     fun getVector(): Vec3 {
-        return Mat4.rotationY(-azimuth) * Mat4.rotationX(pitch) * Mat4.rotationZ(roll) * DOWN
+        return Mat4.rotationZ(-azimuth) * Mat4.rotationY(-pitch) * Mat4.rotationX(roll) * DOWN
     }
 }

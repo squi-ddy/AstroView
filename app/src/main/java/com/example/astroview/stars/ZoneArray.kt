@@ -1,7 +1,5 @@
 package com.example.astroview.stars
 
-import android.util.Log
-import com.example.astroview.astro.Coordinates
 import com.example.astroview.astro.Time
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
@@ -14,14 +12,14 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
     var starPositionScale = 0.0
 
     companion object {
-        val north = Vec3.fromXYZ(0, 0, 1)
-        val d2k = 2451545.0
+        val NORTH = Vec3.fromXYZ(0, 0, 1)
+        const val D2K = 2451545.0
     }
 
     fun initTriangle(index: Int, t: Triangle) {
         val z = zones[index]
         z.center = (t.c0 + t.c1 + t.c2).norm()
-        z.axis0 = north.cross(z.center).norm()
+        z.axis0 = NORTH.cross(z.center).norm()
         z.axis1 = z.center.cross(z.axis0).norm()
 
         for (i in 0 until 3) {
@@ -41,19 +39,16 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
      * @param v Alt-Az vector
      * @param cosLimFov Fov limit: if the dot product is greater than this, the star is returned.
      */
-    fun searchAround(index: Int, v: Vec3, cosLimFov: Double): Set<AltAzStar> {
-        val movementFactor = (PI / 180) * (0.0001 / 3600) * ((Time.getJDE() - d2k) / 365.25) / starPositionScale
+    fun searchAround(index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<J2kStar>) {
+        val movementFactor = (PI / 180) * (0.0001 / 3600) * ((Time.getJDE() - D2K) / 365.25) / starPositionScale
         val z = zones[index]
-        val result = mutableSetOf<AltAzStar>()
-        Log.e("sus", z.stars.size.toString())
+        //Log.e("sus", z.stars.size.toString())
         for (star in z.stars) {
             val starVec = star.getJ2kPos(z, movementFactor).norm()
-            val starAltAz = (Coordinates.matJ2kToAltAz * starVec).norm()
-            if (starAltAz.dot(v) >= cosLimFov) {
-                result.add(AltAzStar(star, starAltAz))
+            if (starVec.dot(v) >= cosLimFov) {
+                resultSet.add(J2kStar(star, starVec))
             }
         }
-        return result
     }
 
     fun scaleAxis() {

@@ -1,11 +1,13 @@
 package com.example.astroview.projection
 
+import com.example.astroview.math.Intersection
+import com.example.astroview.math.SphericalCap
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
-import com.example.astroview.stars.AltAzStar
+import com.example.astroview.stars.J2kStar
 import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
-import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 class GeodesicGrid(val maxLevel: Int) {
@@ -159,7 +161,7 @@ class GeodesicGrid(val maxLevel: Int) {
     }
 
     fun visitTriangles(maxVisLevel: Int, context: StarManager) {
-        val maxVisitLevel = max(maxVisLevel, maxLevel)
+        val maxVisitLevel = min(maxVisLevel, maxLevel)
         for (i in 0 until 20) {
             val corners = icosahedronTriangles[i]
             visitTriangles(
@@ -193,35 +195,102 @@ class GeodesicGrid(val maxLevel: Int) {
         }
     }
 
-    fun searchAround(maxVisLevel: Int, v: Vec3, cosLimFov: Double, context: StarManager): Set<AltAzStar> {
-        // TODO: Don't recursively call this function; find the zone first
-        val maxVisitLevel = max(maxVisLevel, maxLevel)
-        val stars = mutableSetOf<AltAzStar>()
-        for (i in 0 until 20) {
-            stars.addAll(searchAround(0, i, v, cosLimFov, maxVisitLevel, context))
-        }
-        return stars
-    }
-
     fun searchAround(
-        level: Int,
-        index: Int,
+        maxVisLevel: Int,
         v: Vec3,
         cosLimFov: Double,
+        context: StarManager,
+        resultSet: MutableSet<J2kStar>
+    ) {
+        val maxVisitLevel = min(maxVisLevel, maxLevel)
+        val zonesToSearch = arrayListOf(arrayListOf<Int>())
+        getZonesForCap(maxVisitLevel, SphericalCap(v, cosLimFov), zonesToSearch)
+        for (level in zonesToSearch.indices) {
+            for (zone in zonesToSearch[level]) {
+                context.searchAround(level, zone, v, cosLimFov, resultSet)
+            }
+        }
+    }
+
+    /**
+     * Get all zones intersected by a given cap.
+     * @param maxVisLevel max level to visit.
+     * @param cap The cap to find zones for.
+     * @param resultArray An array to store results in.
+     * @see SphericalCap
+     * @return An array of levels, with an array of zones for each level
+     */
+    fun getZonesForCap(
         maxVisLevel: Int,
-        context: StarManager
-    ): Set<AltAzStar> {
-        val stars = context.searchAround(level, index, v, cosLimFov).toMutableSet()
+        cap: SphericalCap,
+        resultArray: ArrayList<ArrayList<Int>>
+    ) {
+        resultArray.clear()
+        val maxVisitLevel = min(maxVisLevel, maxLevel)
+        for (i in 0 until maxVisitLevel) {
+            resultArray.add(ArrayList())
+        }
+        for (i in 0 until 20) {
+            val corners = icosahedronTriangles[i]
+            val triangle = Triangle(
+                icosahedronCorners[corners[0]],
+                icosahedronCorners[corners[1]],
+                icosahedronCorners[corners[2]]
+            )
+            when (cap.containsTriangle(triangle)) {
+                Intersection.PARTIALLY -> {
+                    resultArray[0].add(i)
+                    getZonesForCap(0, i, maxVisitLevel, triangle, cap, false, resultArray)
+                }
+                Intersection.COMPLETELY -> {
+                    resultArray[0].add(i)
+                    getZonesForCap(0, i, maxVisitLevel, triangle, cap, true, resultArray)
+                }
+                Intersection.NONE -> {}
+            }
+
+        }
+    }
+
+    fun getZonesForCap(
+        level: Int,
+        index: Int,
+        maxVisLevel: Int,
+        t: Triangle,
+        cap: SphericalCap,
+        totallyInside: Boolean,
+        resultArray: ArrayList<ArrayList<Int>>
+    ) {
         var lev = level
         var i = index
+        val nextT = triangles[lev][i]
         lev++
         if (lev < maxVisLevel) {
             i *= 4
-            stars.addAll(searchAround(lev, i + 0, v, cosLimFov, maxVisLevel, context))
-            stars.addAll(searchAround(lev, i + 1, v, cosLimFov, maxVisLevel, context))
-            stars.addAll(searchAround(lev, i + 2, v, cosLimFov, maxVisLevel, context))
-            stars.addAll(searchAround(lev, i + 3, v, cosLimFov, maxVisLevel, context))
+            val nextTriangles = arrayOf(
+                Triangle(t.c0, nextT.c2, nextT.c1),
+                Triangle(nextT.c2, t.c1, nextT.c0),
+                Triangle(nextT.c1, nextT.c0, t.c2),
+                nextT
+            )
+            for (triangle in nextTriangles) {
+                if (totallyInside) {
+                    resultArray[lev].add(i)
+                } else {
+                    when (cap.containsTriangle(triangle)) {
+                        Intersection.COMPLETELY -> {
+                            resultArray[lev].add(i)
+                            getZonesForCap(lev, i, maxVisLevel, triangle, cap, true, resultArray)
+                        }
+                        Intersection.PARTIALLY -> {
+                            resultArray[lev].add(i)
+                            getZonesForCap(lev, i, maxVisLevel, triangle, cap, false, resultArray)
+                        }
+                        Intersection.NONE -> {}
+                    }
+                }
+                i++
+            }
         }
-        return stars
     }
 }

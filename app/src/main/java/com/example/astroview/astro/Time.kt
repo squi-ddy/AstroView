@@ -2,6 +2,7 @@ package com.example.astroview.astro
 
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
+import android.util.Log
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.JulianFields

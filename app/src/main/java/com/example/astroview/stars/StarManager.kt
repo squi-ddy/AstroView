@@ -46,7 +46,7 @@ class StarManager(private val context: Context) {
         gridLevels[level].initTriangle(index, t)
     }
 
-    fun searchAround(level: Int, index: Int, v: Vec3, cosLimFov: Double): Set<AltAzStar> {
-        return gridLevels[level].searchAround(index, v, cosLimFov)
+    fun searchAround(level: Int, index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<J2kStar>) {
+        gridLevels[level].searchAround(index, v, cosLimFov, resultSet)
     }
 }

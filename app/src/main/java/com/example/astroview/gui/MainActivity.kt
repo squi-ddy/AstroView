@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         "\nVector: ${it.getVector()}\nStars in view: ${
                             viewModel.core.getStarsInViewport(
                                 it.getVector(),
-                                1.0
+                                0.9
                             ).size
                         }"
         }
