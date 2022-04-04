@@ -42,11 +42,11 @@ class Star2(bytes: ByteArray) : Star() {
     }
 
     override val bV by lazy {
-        bytes[8].toUInt().shr(4).or(bytes[9].toUInt().and(0x1Fu).shl(4)).toInt()
+        bytes[8].toUByte().toUInt().shr(4).or(bytes[9].toUByte().toUInt().and(0x1Fu).shl(4)).toInt()
     }
 
     override val mag by lazy {
-        bytes[9].toUInt().shr(3).toInt()
+        bytes[9].toUByte().toUInt().shr(3).toInt()
     }
 
     init {

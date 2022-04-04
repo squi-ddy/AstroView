@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/star_name"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Vega"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toTopOf="@+id/magnitude"
+                android:layout_marginBottom="16dp" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/magnitude"
+                app:layout_constraintTop_toBottomOf="@+id/star_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/bV"
+                tools:text="Magnitude: 1.0"
+                app:layout_constraintBottom_toTopOf="@+id/hipparcos"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_marginEnd="16dp" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/magnitude"
+                app:layout_constraintBottom_toBottomOf="@+id/magnitude"
+                app:layout_constraintHorizontal_bias="0.5"
+                tools:text="Color Index: 0.0"
+                app:layout_constraintTop_toTopOf="@+id/magnitude" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hipparcos"
+                app:layout_constraintTop_toBottomOf="@+id/magnitude"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/hipparcos_prompt"
+                android:visibility="visible"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toTopOf="@+id/facts"
+                android:layout_marginBottom="8dp" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/facts"
+                app:layout_constraintTop_toBottomOf="@+id/hipparcos"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="very funny star"
+                android:textStyle="italic"
+                android:visibility="visible"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toTopOf="@+id/textView9"
+                android:layout_marginBottom="32dp" />
+
+        <TextView
+                android:text="@string/comments_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintTop_toBottomOf="@+id/facts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/textView9"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toTopOf="@+id/comments"
+                android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/comments"
+                app:layout_constraintTop_toBottomOf="@+id/textView9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintBottom_toTopOf="@+id/comment_button">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <Button
+                android:text="@string/add_comment_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/comment_button"
+                app:layout_constraintTop_toBottomOf="@+id/comments"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

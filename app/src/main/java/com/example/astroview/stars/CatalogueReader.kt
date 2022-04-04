@@ -57,10 +57,10 @@ class CatalogueReader(private val stream: InputStream) {
             )
         }
 
-        Log.e("Cat File Read", params.asList().toString())
+        Log.e("Cat File Read", "${params.asList()}")
 
         stream.close()
 
-        return ZoneArray(zones, params[4].toInt())
+        return ZoneArray(zones, params[4].toInt(), params[5].toInt(), (params[7] / params[6]).toInt())
     }
 }

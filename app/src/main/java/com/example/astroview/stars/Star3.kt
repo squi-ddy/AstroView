@@ -33,7 +33,7 @@ class Star3(bytes: ByteArray): Star() {
     }
 
     override val mag by lazy {
-        bytes[5].toUInt().shr(3).toInt()
+        bytes[5].toUByte().toUInt().shr(3).toInt()
     }
 
     override fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3 {

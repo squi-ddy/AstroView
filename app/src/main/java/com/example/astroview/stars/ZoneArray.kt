@@ -8,7 +8,14 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
+/**
+ * An array representing a collection of zones from a cat file.
+ * @param zones The zones contained.
+ * @param level This array's level on the grid.
+ * @param magMin Minimum star magnitude, in milli-mag
+ * @param magStep The step size for the magnitude, in milli-mag
+ */
+class ZoneArray(val zones: Array<ZoneData>, val level: Int, val magMin: Int, val magStep: Int) {
     var starPositionScale = 0.0
 
     companion object {
@@ -39,14 +46,14 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int) {
      * @param v Alt-Az vector
      * @param cosLimFov Fov limit: if the dot product is greater than this, the star is returned.
      */
-    fun searchAround(index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<J2kStar>) {
+    fun searchAround(index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<Star>) {
         val movementFactor = (PI / 180) * (0.0001 / 3600) * ((Time.getJDE() - D2K) / 365.25) / starPositionScale
         val z = zones[index]
         //Log.e("sus", z.stars.size.toString())
         for (star in z.stars) {
             val starVec = star.getJ2kPos(z, movementFactor).norm()
             if (starVec.dot(v) >= cosLimFov) {
-                resultSet.add(J2kStar(star, starVec))
+                resultSet.add(star)
             }
         }
     }

@@ -10,7 +10,7 @@ class StarManager(private val context: Context) {
     companion object {
         private var initialised = false
 
-        // Only using 3 due to memory reasons
+        // Only using 1 due to memory reasons
         private val files = arrayOf(
             R.raw.stars_0_0v0_8,
             R.raw.stars_1_0v0_8,
@@ -46,7 +46,7 @@ class StarManager(private val context: Context) {
         gridLevels[level].initTriangle(index, t)
     }
 
-    fun searchAround(level: Int, index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<J2kStar>) {
+    fun searchAround(level: Int, index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<Star>) {
         gridLevels[level].searchAround(index, v, cosLimFov, resultSet)
     }
 }

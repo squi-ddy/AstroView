@@ -1,12 +1,12 @@
 package com.example.astroview.projection
 
-import com.example.astroview.math.Intersection
 import com.example.astroview.math.SphericalCap
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
-import com.example.astroview.stars.J2kStar
+import com.example.astroview.stars.Star
 import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
+import com.example.astroview.util.Intersection
 import kotlin.math.min
 import kotlin.math.sqrt
 
@@ -200,11 +200,12 @@ class GeodesicGrid(val maxLevel: Int) {
         v: Vec3,
         cosLimFov: Double,
         context: StarManager,
-        resultSet: MutableSet<J2kStar>
+        resultSet: MutableSet<Star>
     ) {
         val maxVisitLevel = min(maxVisLevel, maxLevel)
         val zonesToSearch = arrayListOf(arrayListOf<Int>())
         getZonesForCap(maxVisitLevel, SphericalCap(v, cosLimFov), zonesToSearch)
+        //Log.e("sus", zonesToSearch.toString())
         for (level in zonesToSearch.indices) {
             for (zone in zonesToSearch[level]) {
                 context.searchAround(level, zone, v, cosLimFov, resultSet)
@@ -246,7 +247,9 @@ class GeodesicGrid(val maxLevel: Int) {
                     resultArray[0].add(i)
                     getZonesForCap(0, i, maxVisitLevel, triangle, cap, true, resultArray)
                 }
-                Intersection.NONE -> {}
+                Intersection.NONE -> {
+                    // do nothing
+                }
             }
 
         }
@@ -286,7 +289,9 @@ class GeodesicGrid(val maxLevel: Int) {
                             resultArray[lev].add(i)
                             getZonesForCap(lev, i, maxVisLevel, triangle, cap, false, resultArray)
                         }
-                        Intersection.NONE -> {}
+                        Intersection.NONE -> {
+                            // do nothing
+                        }
                     }
                 }
                 i++

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">AstroView</string>
+    <string name="login_title">Login</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="show_password_prompt">Show Password</string>
+    <string name="login_button">Login</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="your_account_title">Your Account</string>
+    <string name="account_details">Logged in as $1</string>
+    <string name="hipparcos_prompt">On the Hipparcos List</string>
+    <string name="comments_title">Comments</string>
+    <string name="add_comment_prompt">Add Comment</string>
+    <string name="delete_account_prompt">Delete</string>
 </resources>

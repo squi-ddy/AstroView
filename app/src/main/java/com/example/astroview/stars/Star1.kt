@@ -48,7 +48,7 @@ class Star1(bytes: ByteArray) : Star() {
     }
 
     val componentIds by lazy {
-        bytes[3].toInt()
+        bytes[3].toUByte().toInt()
     }
 
     override val x0 by lazy {
@@ -60,11 +60,11 @@ class Star1(bytes: ByteArray) : Star() {
     }
 
     override val bV by lazy {
-        bytes[12].toInt()
+        bytes[12].toUByte().toInt()
     }
 
     override val mag by lazy {
-        bytes[13].toInt()
+        bytes[13].toUByte().toInt()
     }
 
     val spInt by lazy {
@@ -91,8 +91,8 @@ class Star1(bytes: ByteArray) : Star() {
 
     override fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3 {
         var pos = z.axis0
-        pos *= x0.toDouble() + movementFactor * dx0
-        pos += z.axis1 * (x1.toDouble() + movementFactor * dx1)
+        pos *= x0 + movementFactor * dx0
+        pos += z.axis1 * (x1 + movementFactor * dx1)
         pos += z.center
         return pos
     }

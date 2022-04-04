@@ -1,6 +1,6 @@
 package com.example.astroview.math
 
-import com.example.astroview.projection.GeodesicGrid
+import com.example.astroview.util.Intersection
 
 /**
  * A spherical cap on the unit sphere.
@@ -30,8 +30,4 @@ class SphericalCap(centerVector: Vec3, val cosLimit: Double) {
             Intersection.PARTIALLY
         }
     }
-}
-
-enum class Intersection {
-    COMPLETELY, PARTIALLY, NONE
 }

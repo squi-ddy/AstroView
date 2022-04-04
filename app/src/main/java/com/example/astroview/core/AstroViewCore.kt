@@ -1,11 +1,11 @@
 package com.example.astroview.core
 
 import android.content.Context
-import android.util.Log
 import com.example.astroview.astro.Coordinates
 import com.example.astroview.math.Vec3
 import com.example.astroview.projection.GeodesicGrid
 import com.example.astroview.stars.J2kStar
+import com.example.astroview.stars.Star
 import com.example.astroview.stars.StarManager
 
 class AstroViewCore private constructor() {
@@ -37,9 +37,9 @@ class AstroViewCore private constructor() {
      * @param altAz current Alt-Az of the viewport
      * @param cosLimitFov Current field-of-view.
      */
-    fun getStarsInViewport(altAz: Vec3, cosLimitFov: Double): Set<J2kStar> {
+    fun getStarsInViewport(altAz: Vec3, cosLimitFov: Double): Set<Star> {
         val grid = geodesicGrid!!
-        val resultSet = mutableSetOf<J2kStar>()
+        val resultSet = mutableSetOf<Star>()
         grid.searchAround(grid.maxLevel, altAzToJ2k(altAz).norm(), cosLimitFov, starManager!!, resultSet)
         return resultSet
     }

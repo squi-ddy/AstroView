@@ -1,4 +1,4 @@
-package com.example.astroview.gui
+package com.example.astroview.ui
 
 import android.Manifest
 import android.content.Context

@@ -1,7 +1,5 @@
 package com.example.astroview.math
 
-import java.lang.IndexOutOfBoundsException
-
 class Triangle(
     val c0: Vec3,
     val c1: Vec3,

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/login_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="40sp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/textView2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/username_entry"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_marginBottom="64dp" />
+
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/username_entry"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/password_entry"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:hint="@string/username_hint"
+            android:minHeight="48dp" />
+
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/password_entry"
+            app:layout_constraintTop_toBottomOf="@+id/username_entry"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/show_password"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:hint="@string/password_hint"
+            android:minHeight="48dp" />
+
+    <CheckBox
+            android:text="@string/show_password_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_password"
+            app:layout_constraintTop_toBottomOf="@+id/password_entry"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/sign_up_button"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+    <Button
+            android:text="@string/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sign_up_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="@+id/sign_up_button"
+            app:layout_constraintBottom_toBottomOf="@+id/sign_up_button"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <Button
+            android:text="@string/sign_up_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sign_up_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_password"
+            app:layout_constraintEnd_toStartOf="@+id/login_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="64dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
