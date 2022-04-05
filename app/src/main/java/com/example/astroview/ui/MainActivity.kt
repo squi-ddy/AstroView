@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         viewModel.orientation.observe(this) {
             val stars = viewModel.core.getStarsInViewport(
                 it.getVector(),
-                0.8
+                0.9
             )
             stars.sortedBy { s -> viewModel.core.getMagnitude(s.star, s.level) }
             binding.sensorData.text =
@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
         }
 
-        if (ct >= 10) {
+        if (ct >= 2) {
             ct = 0
             updateOrientationAngles()
         }

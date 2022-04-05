@@ -4,7 +4,7 @@ import com.example.astroview.math.Vec3
 import com.example.astroview.util.ByteConverter
 import java.lang.IllegalArgumentException
 
-class Star1(bytes: ByteArray) : Star() {
+class Star1(bytes: ByteArray) : Star(bytes) {
     /*
               _______________
     0    hip |               |
@@ -48,35 +48,35 @@ class Star1(bytes: ByteArray) : Star() {
     }
 
     val componentIds by lazy {
-        bytes[3].toUByte().toInt()
+        getByte(3).toInt()
     }
 
-    override val x0 by lazy {
-        ByteConverter.bytesToInt(bytes.slice(4..7), true).toUInt().toInt()
+    override fun getX0(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(4..7), true).toUInt().toInt()
     }
 
-    override val x1 by lazy {
-        ByteConverter.bytesToInt(bytes.slice(8..11), true).toUInt().toInt()
+    override fun getX1(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(8..11), true).toUInt().toInt()
     }
 
-    override val bV by lazy {
-        bytes[12].toUByte().toInt()
+    override fun getBV(): Int {
+        return getByte(12).toInt()
     }
 
-    override val mag by lazy {
-        bytes[13].toUByte().toInt()
+    override fun getMag(): Int {
+        return getByte(13).toInt()
     }
 
     val spInt by lazy {
         ByteConverter.bytesToInt(bytes.slice(14..15), false).toInt()
     }
 
-    val dx0 by lazy {
-        ByteConverter.bytesToInt(bytes.slice(16..19), true).toUInt().toInt()
+    fun getDx0(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(16..19), true).toUInt().toInt()
     }
 
-    val dx1 by lazy {
-        ByteConverter.bytesToInt(bytes.slice(20..23), true).toUInt().toInt()
+    fun getDx1(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(20..23), true).toUInt().toInt()
     }
 
     val plx by lazy {
@@ -91,8 +91,8 @@ class Star1(bytes: ByteArray) : Star() {
 
     override fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3 {
         var pos = z.axis0
-        pos *= x0 + movementFactor * dx0
-        pos += z.axis1 * (x1 + movementFactor * dx1)
+        pos *= getX0() + movementFactor * getDx0()
+        pos += z.axis1 * (getX1() + movementFactor * getDx1())
         pos += z.center
         return pos
     }
