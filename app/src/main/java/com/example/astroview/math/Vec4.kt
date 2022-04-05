@@ -38,6 +38,10 @@ class Vec4 private constructor(vx: Number, vy: Number, vz: Number, vw: Number) {
         return Vec4(x / s.toDouble(), y / s.toDouble(), z / s.toDouble(), w / s.toDouble())
     }
 
+    operator fun unaryMinus(): Vec4 {
+        return this * -1
+    }
+
     fun dot(o: Vec4): Double {
         return x * o.x + y * o.y + z * o.z + w * o.w
     }

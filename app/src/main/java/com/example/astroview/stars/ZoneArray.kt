@@ -75,7 +75,6 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int, val magMin: Int, val
      * @return The star's magnitude
      */
     fun getStarMagnitude(s: Star): Double {
-        if (s.mag != 159) Log.e("sus", "sus???")
-        return (s.mag * magStep + magMin) / 1000.0
+        return (s.getMag() * magStep + magMin) / 1000.0
     }
 }

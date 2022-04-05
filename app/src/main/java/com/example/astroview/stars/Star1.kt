@@ -43,12 +43,12 @@ class Star1(bytes: ByteArray) : Star(bytes) {
         const val maxPosVal = 0x7FFFFFFF
     }
 
-    val hip by lazy {
-        ByteConverter.bytesToInt(bytes.slice(0..2), true).toInt()
+    fun getHip(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(0..2), true).toInt()
     }
 
-    val componentIds by lazy {
-        getByte(3).toInt()
+    fun getComponentIds(): Int {
+        return getByte(3).toInt()
     }
 
     override fun getX0(): Int {
@@ -67,8 +67,8 @@ class Star1(bytes: ByteArray) : Star(bytes) {
         return getByte(13).toInt()
     }
 
-    val spInt by lazy {
-        ByteConverter.bytesToInt(bytes.slice(14..15), false).toInt()
+    fun getSpInt(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(14..15), false).toInt()
     }
 
     fun getDx0(): Int {
@@ -79,8 +79,8 @@ class Star1(bytes: ByteArray) : Star(bytes) {
         return ByteConverter.bytesToInt(bytes.slice(20..23), true).toUInt().toInt()
     }
 
-    val plx by lazy {
-        ByteConverter.bytesToInt(bytes.slice(24..27), true).toUInt().toInt()
+    fun getPlx(): Int {
+        return ByteConverter.bytesToInt(bytes.slice(24..27), true).toUInt().toInt()
     }
 
     init {

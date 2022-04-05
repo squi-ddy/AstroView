@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.astroview.astro.Coordinates
 import com.example.astroview.astro.OrientationData
 import com.example.astroview.core.AppViewModel
+import com.example.astroview.core.CoreConstants
 import com.example.astroview.databinding.ActivityMainBinding
 import kotlin.math.PI
 import kotlin.text.Typography.degree
@@ -22,7 +23,7 @@ import kotlin.text.Typography.degree
 class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel: AppViewModel by viewModels()
+    private val viewModel by viewModels<AppViewModel>()
 
     private lateinit var sensorManager: SensorManager
     private lateinit var locationManager: LocationManager
@@ -68,9 +69,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         viewModel.orientation.observe(this) {
             val stars = viewModel.core.getStarsInViewport(
                 it.getVector(),
-                0.9
+                CoreConstants.COS_LIMIT_FOV
             )
             stars.sortedBy { s -> viewModel.core.getMagnitude(s.star, s.level) }
+            viewModel.projectedStars.value = viewModel.core.projectStars(
+                stars,
+                it.getAxes(),
+                CoreConstants.RADIUS.toDouble(),
+                CoreConstants.COS_LIMIT_FOV
+            )
             binding.sensorData.text =
                 "Azimuth: ${it.azimuth / PI * 180}$degree\nPitch: ${it.pitch / PI * 180}$degree\nRoll: ${it.roll / PI * 180}$degree" +
                         "\nVector: ${it.getVector()}\nBrightest star: ${
@@ -79,7 +86,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             } else {
                                 "No stars"
                             }
-                        }"
+                        }\nNo. of stars: ${viewModel.projectedStars.value!!.size}"
         }
     }
 

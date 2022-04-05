@@ -170,7 +170,7 @@ class GeodesicGrid(val maxLevel: Int) {
         }
     }
 
-    fun visitTriangles(
+    private fun visitTriangles(
         level: Int,
         index: Int,
         t: Triangle,
@@ -251,7 +251,7 @@ class GeodesicGrid(val maxLevel: Int) {
         }
     }
 
-    fun getZonesForCap(
+    private fun getZonesForCap(
         level: Int,
         index: Int,
         maxVisLevel: Int,

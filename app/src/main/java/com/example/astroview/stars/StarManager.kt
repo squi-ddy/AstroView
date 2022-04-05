@@ -2,7 +2,7 @@ package com.example.astroview.stars
 
 import android.content.Context
 import com.example.astroview.R
-import com.example.astroview.core.AstroViewCore
+import com.example.astroview.core.CoreInterface
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
 
@@ -13,14 +13,14 @@ class StarManager(private val context: Context) {
         // Only using 1 due to memory reasons
         private val files = arrayOf(
             R.raw.stars_0_0v0_8,
-            // R.raw.stars_1_0v0_8,
+            R.raw.stars_1_0v0_8,
             // R.raw.stars_2_0v0_8
         )
     }
 
     val gridLevels = arrayListOf<ZoneArray>()
 
-    fun init(core: AstroViewCore) {
+    fun init(core: CoreInterface) {
         if (initialised) throw IllegalStateException("StarManager already initialised")
 
         for (i in files.indices) {

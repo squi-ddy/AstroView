@@ -45,6 +45,10 @@ class Vec3 private constructor(vx: Number, vy: Number, vz: Number) {
         return Vec3(x / s.toDouble(), y / s.toDouble(), z / s.toDouble())
     }
 
+    operator fun unaryMinus(): Vec3 {
+        return this * -1
+    }
+
     fun dot(o: Vec3): Double {
         return x * o.x + y * o.y + z * o.z
     }

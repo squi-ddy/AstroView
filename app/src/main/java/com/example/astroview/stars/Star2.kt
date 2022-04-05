@@ -2,7 +2,7 @@ package com.example.astroview.stars
 
 import com.example.astroview.math.Vec3
 
-class Star2(bytes: ByteArray) : Star() {
+class Star2(bytes: ByteArray) : Star(bytes) {
     /*
               _______________
     0     x0 |               |
@@ -23,30 +23,33 @@ class Star2(bytes: ByteArray) : Star() {
         const val maxPosVal = 0x7FFFF
     }
 
-    override val x0 by lazy {
-        bytes[0].toUInt().or(bytes[1].toUInt().shl(8)).or(bytes[2].toUInt().and(0xFu).shl(16))
+    override fun getX0(): Int {
+        return getByte(0).toUInt().or(getByte(1).toUInt().shl(8))
+            .or(getByte(2).toUInt().and(0xFu).shl(16))
             .toInt()
     }
 
-    override val x1 by lazy {
-        bytes[2].toUInt().shr(4).or(bytes[3].toUInt().shl(4)).or(bytes[4].toUInt().shl(12)).toInt()
+    override fun getX1(): Int {
+        return getByte(2).toUInt().shr(4).or(getByte(3).toUInt().shl(4))
+            .or(getByte(4).toUInt().shl(12)).toInt()
     }
 
-    val dx0 by lazy {
-        bytes[5].toUInt().or(bytes[6].toUInt().and(0x3Fu).shl(8)).toInt()
+    fun getDx0(): Int {
+        return getByte(5).toUInt().or(getByte(6).toUInt().and(0x3Fu).shl(8)).toInt()
     }
 
-    val dx1 by lazy {
-        bytes[6].toUInt().shr(6).or(bytes[7].toUInt().shl(2)).or(bytes[8].toUInt().and(0xFu))
+    fun getDx1(): Int {
+        return getByte(6).toUInt().shr(6).or(getByte(7).toUInt().shl(2))
+            .or(getByte(8).toUInt().and(0xFu))
             .toInt()
     }
 
-    override val bV by lazy {
-        bytes[8].toUByte().toUInt().shr(4).or(bytes[9].toUByte().toUInt().and(0x1Fu).shl(4)).toInt()
+    override fun getBV(): Int {
+        return getByte(8).toUInt().shr(4).or(getByte(9).toUInt().and(0x1Fu).shl(4)).toInt()
     }
 
-    override val mag by lazy {
-        bytes[9].toUByte().toUInt().shr(3).toInt()
+    override fun getMag(): Int {
+        return getByte(9).toUInt().shr(3).toInt()
     }
 
     init {
@@ -57,8 +60,8 @@ class Star2(bytes: ByteArray) : Star() {
 
     override fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3 {
         var pos = z.axis0
-        pos *= x0 + movementFactor * dx0
-        pos += z.axis1 * (x1 + movementFactor * dx1)
+        pos *= getX0() + movementFactor * getDx0()
+        pos += z.axis1 * (getX1() + movementFactor * getDx1())
         pos += z.center
         return pos
     }
