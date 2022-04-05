@@ -1,11 +1,13 @@
 package com.example.astroview.stars
 
+import android.util.Log
 import com.example.astroview.astro.Time
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
 import com.example.astroview.util.StarUtils
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
@@ -27,33 +29,34 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int, val magMin: Int, val
         val z = zones[index]
         z.center = (t.c0 + t.c1 + t.c2).norm()
         z.axis0 = NORTH.cross(z.center).norm()
-        z.axis1 = z.center.cross(z.axis0).norm()
+        z.axis1 = z.center.cross(z.axis0)
 
         for (i in 0 until 3) {
             val mu0 = (t[i] - z.center).dot(z.axis0)
             val mu1 = (t[i] - z.center).dot(z.axis1)
             val f = 1 / sqrt(1 - mu0 * mu0 - mu1 * mu1)
             var h = abs(mu0) * f
-            if (starPositionScale < h) starPositionScale = h
+            starPositionScale = max(starPositionScale, h)
             h = abs(mu1) * f
-            if (starPositionScale < h) starPositionScale = h
+            starPositionScale = max(starPositionScale, h)
         }
     }
 
     /**
-     * Search around an Alt-Az vector for stars.
+     * Search around an J2k vector for stars.
      * @param index Zone to search
-     * @param v Alt-Az vector
+     * @param v J2k vector to search around
      * @param cosLimFov Fov limit: if the dot product is greater than this, the star is returned.
      */
-    fun searchAround(index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableSet<Star>) {
+    fun searchAround(index: Int, v: Vec3, cosLimFov: Double, resultSet: MutableList<DetailedStar>) {
         val movementFactor = (PI / 180) * (0.0001 / 3600) * ((Time.getJDE() - D2K) / 365.25) / starPositionScale
         val z = zones[index]
+        val vn = v.norm()
         //Log.e("sus", z.stars.size.toString())
         for (star in z.stars) {
-            val starVec = star.getJ2kPos(z, movementFactor).norm()
-            if (starVec.dot(v) >= cosLimFov) {
-                resultSet.add(star)
+            val starVec = star.getJ2kPos(z, movementFactor)
+            if (starVec.norm().dot(vn) >= cosLimFov) {
+                resultSet.add(DetailedStar(star, starVec, level))
             }
         }
     }
@@ -64,5 +67,15 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int, val magMin: Int, val
             z.axis0 *= starPositionScale
             z.axis1 *= starPositionScale
         }
+    }
+
+    /**
+     * Returns the magnitude of a star in this ZoneArray.
+     * @param s Star to get magnitude for
+     * @return The star's magnitude
+     */
+    fun getStarMagnitude(s: Star): Double {
+        if (s.mag != 159) Log.e("sus", "sus???")
+        return (s.mag * magStep + magMin) / 1000.0
     }
 }

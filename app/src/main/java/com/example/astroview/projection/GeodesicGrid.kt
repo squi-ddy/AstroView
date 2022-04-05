@@ -1,9 +1,10 @@
 package com.example.astroview.projection
 
+import android.util.Log
 import com.example.astroview.math.SphericalCap
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
-import com.example.astroview.stars.Star
+import com.example.astroview.stars.DetailedStar
 import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
 import com.example.astroview.util.Intersection
@@ -119,12 +120,7 @@ class GeodesicGrid(val maxLevel: Int) {
                     newT.c1, newT.c0, t.c2
                 )
             )
-            initTriangle(
-                newLevel, newIndex + 3,
-                Triangle(
-                    newT.c0, newT.c1, newT.c2
-                )
-            )
+            initTriangle(newLevel, newIndex + 3, newT)
         }
     }
 
@@ -200,15 +196,15 @@ class GeodesicGrid(val maxLevel: Int) {
         v: Vec3,
         cosLimFov: Double,
         context: StarManager,
-        resultSet: MutableSet<Star>
+        resultList: MutableList<DetailedStar>
     ) {
         val maxVisitLevel = min(maxVisLevel, maxLevel)
         val zonesToSearch = arrayListOf(arrayListOf<Int>())
         getZonesForCap(maxVisitLevel, SphericalCap(v, cosLimFov), zonesToSearch)
-        //Log.e("sus", zonesToSearch.toString())
+        Log.e("sus", "$zonesToSearch $v")
         for (level in zonesToSearch.indices) {
             for (zone in zonesToSearch[level]) {
-                context.searchAround(level, zone, v, cosLimFov, resultSet)
+                context.searchAround(level, zone, v, cosLimFov, resultList)
             }
         }
     }
@@ -248,7 +244,7 @@ class GeodesicGrid(val maxLevel: Int) {
                     getZonesForCap(0, i, maxVisitLevel, triangle, cap, true, resultArray)
                 }
                 Intersection.NONE -> {
-                    // do nothing
+                    //Log.e("sus", "$i not in")
                 }
             }
 

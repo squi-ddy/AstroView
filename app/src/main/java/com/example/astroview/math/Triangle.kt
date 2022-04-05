@@ -21,4 +21,8 @@ class Triangle(
             else -> throw IndexOutOfBoundsException("Triangle has no index $index")
         }
     }
+
+    fun contains(other: Vec3): Boolean {
+        return (c0.cross(c1).dot(other) >= 0 && c1.cross(c2).dot(other) >= 0 && c2.cross(c0).dot(other) >= 0)
+    }
 }

@@ -54,7 +54,7 @@ class Vec3 private constructor(vx: Number, vy: Number, vz: Number) {
     }
 
     fun norm(): Vec3 {
-        return Vec3(x / mag, y / mag, z / mag)
+        return this / mag
     }
 
     override fun toString(): String {

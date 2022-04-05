@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = FloatArray(3)
 
+    private var ct = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -64,13 +66,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
         viewModel.orientation.observe(this) {
+            val stars = viewModel.core.getStarsInViewport(
+                it.getVector(),
+                0.8
+            )
+            stars.sortedBy { s -> viewModel.core.getMagnitude(s.star, s.level) }
             binding.sensorData.text =
                 "Azimuth: ${it.azimuth / PI * 180}$degree\nPitch: ${it.pitch / PI * 180}$degree\nRoll: ${it.roll / PI * 180}$degree" +
-                        "\nVector: ${it.getVector()}\nStars in view: ${
-                            viewModel.core.getStarsInViewport(
-                                it.getVector(),
-                                0.9
-                            ).size
+                        "\nVector: ${it.getVector()}\nBrightest star: ${
+                            if (stars.size > 0) {
+                                viewModel.core.getMagnitude(stars[0].star, stars[0].level)
+                            } else {
+                                "No stars"
+                            }
                         }"
         }
     }
@@ -142,7 +150,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
         }
 
-        updateOrientationAngles()
+        if (ct >= 10) {
+            ct = 0
+            updateOrientationAngles()
+        }
+        ct++
     }
 
     // Compute the three orientation angles based on the most recent readings from
@@ -164,6 +176,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         viewModel.orientation.value =
             OrientationData(orientationAngles[0], orientationAngles[1], orientationAngles[2])
+
+        Coordinates.updateMatrices()
     }
 
 }

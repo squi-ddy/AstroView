@@ -46,12 +46,15 @@ class CatalogueReader(private val stream: InputStream) {
             zoneSizes[i] = ByteConverter.bytesToInt(bytes, isLittleEndian).toInt()
         }
 
+        Log.e("sus", "${zoneSizes.asList()}")
+
+        val starBytes = ByteArray(StarUtils.getByteCount(params[1]))
+
         val zones = Array(zoneCount) { i ->
-            val starBytes = ByteArray(StarUtils.getByteCount(params[1]))
             ZoneData(
                 Array(zoneSizes[i]) {
                     stream.read(starBytes)
-                    StarUtils.createStar(starBytes)
+                    StarUtils.createStar(starBytes.clone())
                 },
                 zoneSizes[i]
             )
@@ -61,6 +64,6 @@ class CatalogueReader(private val stream: InputStream) {
 
         stream.close()
 
-        return ZoneArray(zones, params[4].toInt(), params[5].toInt(), (params[7] / params[6]).toInt())
+        return ZoneArray(zones, params[4].toInt(), params[5].toInt(), (params[6] / params[7]).toInt())
     }
 }

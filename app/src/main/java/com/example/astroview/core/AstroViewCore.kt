@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.astroview.astro.Coordinates
 import com.example.astroview.math.Vec3
 import com.example.astroview.projection.GeodesicGrid
-import com.example.astroview.stars.J2kStar
+import com.example.astroview.stars.DetailedStar
 import com.example.astroview.stars.Star
 import com.example.astroview.stars.StarManager
 
@@ -37,11 +37,11 @@ class AstroViewCore private constructor() {
      * @param altAz current Alt-Az of the viewport
      * @param cosLimitFov Current field-of-view.
      */
-    fun getStarsInViewport(altAz: Vec3, cosLimitFov: Double): Set<Star> {
+    fun getStarsInViewport(altAz: Vec3, cosLimitFov: Double): List<DetailedStar> {
         val grid = geodesicGrid!!
-        val resultSet = mutableSetOf<Star>()
-        grid.searchAround(grid.maxLevel, altAzToJ2k(altAz).norm(), cosLimitFov, starManager!!, resultSet)
-        return resultSet
+        val resultList = mutableListOf<DetailedStar>()
+        grid.searchAround(grid.maxLevel, altAzToJ2k(altAz).norm(), cosLimitFov, starManager!!, resultList)
+        return resultList
     }
 
     /**
@@ -51,5 +51,14 @@ class AstroViewCore private constructor() {
      */
     fun altAzToJ2k(altAz: Vec3): Vec3 {
         return Coordinates.matAltAzToJ2k * altAz
+    }
+
+    /**
+     * Get the visible magnitude of this star.
+     * @param star Star to find magnitude of.
+     * @param level This star's level in the grid.
+     */
+    fun getMagnitude(star: Star, level: Int): Double {
+        return starManager!!.getMagnitude(star, level)
     }
 }
