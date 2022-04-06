@@ -41,6 +41,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
         } else {
@@ -53,8 +56,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             // ???
             throw IllegalStateException("idk what how")
         }
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         val bestProvider = locationManager.getBestProvider(
             Criteria(), true
@@ -64,7 +65,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         Coordinates.lat = lastKnownLocation?.latitude ?: 0.0
         Coordinates.long = lastKnownLocation?.longitude ?: 0.0
         Coordinates.updateMatrices()
-
 
         viewModel.orientation.observe(this) {
             val stars = viewModel.core.getStarsInViewport(
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 CoreConstants.RADIUS.toDouble(),
                 CoreConstants.COS_LIMIT_FOV
             )
-            binding.sensorData.text =
+            /*binding.sensorData.text =
                 "Azimuth: ${it.azimuth / PI * 180}$degree\nPitch: ${it.pitch / PI * 180}$degree\nRoll: ${it.roll / PI * 180}$degree" +
                         "\nVector: ${it.getVector()}\nBrightest star: ${
                             if (stars.size > 0) {
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             } else {
                                 "No stars"
                             }
-                        }\nNo. of stars: ${viewModel.projectedStars.value!!.size}"
+                        }\nNo. of stars: ${viewModel.projectedStars.value!!.size}"*/
         }
     }
 
@@ -123,6 +123,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // In this example, the sensor reporting delay is small enough such that
         // the application receives an update before the system checks the sensor
         // readings again.
+
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
             sensorManager.registerListener(
                 this,

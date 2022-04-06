@@ -1,6 +1,5 @@
 package com.example.astroview.stars
 
-import android.util.Log
 import com.example.astroview.astro.Time
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3

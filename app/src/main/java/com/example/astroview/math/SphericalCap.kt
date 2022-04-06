@@ -10,27 +10,36 @@ import com.example.astroview.util.Intersection
 class SphericalCap(centerVector: Vec3, private val cosLimit: Double) {
     private val centerVector = centerVector.norm()
 
+    fun dot(other: Vec3): Double {
+        return centerVector.dot(other.norm())
+    }
+
     fun contains(other: Vec3): Boolean {
-        return centerVector.dot(other.norm()) >= cosLimit
+        return dot(other) >= cosLimit
     }
 
     fun containsTriangle(other: Triangle): Intersection {
-        // Project the triangle onto a plane
-        val l0 = (other.c1 - other.c0).norm()
-        val l1 = (other.c2 - other.c0).norm()
-        val xAxis = l0
-        val yAxis = (l1 - (xAxis * l1.dot(xAxis))).norm()
-        val c0 = Vec2.fromXY(0, 0)
-        val c1 = Vec2.fromXY((other.c1 - other.c0).dot(xAxis), 0)
-        val c2 = Vec2.fromXY((other.c2 - other.c0).do)
+        val testPoints = arrayListOf(
+            other.c0, other.c1, other.c2
+        )
+        testPoints.sortedByDescending { dot(it) }
 
-        // Project the centerVector onto this plane.
-        // c * cV = x0 * xAxis + y0 * yAxis
 
-        return if (c0InCap && c1InCap && c2InCap) {
+        testPoints
+
+        var allInCap = true
+        var oneInCap = false
+
+        for (point in testPoints) {
+            val pointInCap = contains(point)
+            allInCap = allInCap && pointInCap
+            oneInCap = oneInCap || pointInCap
+        }
+
+        return if (allInCap) {
             // Totally in cap
             Intersection.COMPLETELY
-        } else if (!c0InCap && !c1InCap && !c2InCap && !other.contains(centerVector)) {
+        } else if (!oneInCap && !other.contains(centerVector)) {
             // Not in cap
             Intersection.NONE
         } else {

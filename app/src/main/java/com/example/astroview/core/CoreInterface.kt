@@ -103,10 +103,24 @@ class CoreInterface private constructor() {
     fun renderStar(context: Context, star: ProjectedStar, r: Double): ImageView {
         val renderedStar = ImageView(context)
         renderedStar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.star))
-        // TODO: set size
+        setStarSize(renderedStar)
+        // TODO: set transparency
         // TODO: set color
         renderedStar.translationX = (star.position.x + r - renderedStar.width / 2).toFloat()
         renderedStar.translationY = (star.position.y + r - renderedStar.height / 2).toFloat()
         return renderedStar
+    }
+
+    /**
+     * Set the size of the star ImageView.
+     * @param star The ImageView representing the star.
+     */
+    private fun setStarSize(star: ImageView) {
+        star.apply {
+            maxHeight = CoreConstants.STAR_RADIUS
+            maxWidth = CoreConstants.STAR_RADIUS
+            minimumHeight = CoreConstants.STAR_RADIUS
+            minimumWidth = CoreConstants.STAR_RADIUS
+        }
     }
 }

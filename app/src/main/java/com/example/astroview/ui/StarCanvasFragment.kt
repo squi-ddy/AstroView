@@ -1,6 +1,7 @@
 package com.example.astroview.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,9 +32,9 @@ class StarCanvasFragment : Fragment() {
         binding.circleBackground.minimumHeight = 2 * CoreConstants.RADIUS
 
         binding.starCanvas.apply {
-            zoomTo(10f, false)
+            /*zoomTo(10f, false)
             setMinZoom(5f)
-            setMaxZoom(15f)
+            setMaxZoom(15f)*/
         }
 
         viewModel.projectedStars.observe(viewLifecycleOwner) {

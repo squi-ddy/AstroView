@@ -1,9 +1,6 @@
 package com.example.astroview.astro
 
-import android.util.Log
 import com.example.astroview.math.Mat4
-import com.example.astroview.stars.ZoneArray
-import com.example.astroview.stars.ZoneArray.Companion.NORTH
 import kotlin.math.PI
 import kotlin.math.sqrt
 
@@ -58,11 +55,9 @@ object Coordinates {
         val jd = Time.getJD()
         val jde = Time.getJDE()
 
-        Log.e("sus", "$jd $jde")
         val matAltAzToEquatorial = getRotAltAzToEquatorial(jd, jde, 0.0, 0.0)
         val matEquatorialToJ2k = getRotEquatorialToJ2k(jde)
         matAltAzToJ2k = matAltAzToEquatorial * matEquatorialToJ2k
         matJ2kToAltAz = matAltAzToJ2k.transpose()
-        Log.e("sus", "${matJ2kToAltAz * NORTH}")
     }
 }
