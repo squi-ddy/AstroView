@@ -41,4 +41,12 @@ object StarUtils {
             else -> throw IllegalArgumentException("Unknown star type")
         }
     }
+
+    /**
+     * Retrieves the star's B-V value.
+     * @param star The star to find B-V for.
+     */
+    fun getBV(star: Star): Double {
+        return star.getBVIndex() * (4.0 / 127) - 0.5
+    }
 }

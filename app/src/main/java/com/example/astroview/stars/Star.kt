@@ -15,7 +15,7 @@ abstract class Star(val bytes: ByteArray) {
     abstract fun getX0(): Int
     abstract fun getX1(): Int
     abstract fun getMag(): Int
-    abstract fun getBV(): Int
+    abstract fun getBVIndex(): Int
 
     abstract fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3
 }

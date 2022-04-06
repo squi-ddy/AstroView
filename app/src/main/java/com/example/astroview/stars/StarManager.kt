@@ -50,7 +50,7 @@ class StarManager(private val context: Context) {
         gridLevels[level].searchAround(index, v, cosLimFov, resultSet)
     }
 
-    fun getMagnitude(star: Star, level: Int): Double {
-        return gridLevels[level].getStarMagnitude(star)
+    fun getVMagnitude(star: Star, level: Int): Double {
+        return gridLevels[level].getVMagnitude(star)
     }
 }

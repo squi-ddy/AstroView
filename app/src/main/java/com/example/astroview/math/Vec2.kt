@@ -1,5 +1,6 @@
 package com.example.astroview.math
 
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -55,6 +56,10 @@ class Vec2 private constructor(vx: Number, vy: Number) {
 
     fun norm(): Vec2 {
         return this / mag
+    }
+
+    fun getTheta(): Double {
+        return atan2(y, x)
     }
 
     override fun toString(): String {

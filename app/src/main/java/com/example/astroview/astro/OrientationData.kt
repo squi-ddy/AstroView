@@ -16,9 +16,10 @@ class OrientationData(val azimuth: Float, val pitch: Float, val roll: Float) {
         // x -> due south
         // y -> ????
         // z -> up from phone
-        val AXIS_X = Vec3.fromXYZ(1, 0, 0)
-        val AXIS_Y = Vec3.fromXYZ(0, 1, 0)
+        val AXIS_X = Vec3.fromXYZ(0, -1, 0)
+        val AXIS_Y = Vec3.fromXYZ(1, 0, 0)
         val AXIS_Z = Vec3.fromXYZ(0, 0, 1)
+        val NORTH = Vec3.fromXYZ(-1, 0, 0)
     }
 
     /**
@@ -27,7 +28,7 @@ class OrientationData(val azimuth: Float, val pitch: Float, val roll: Float) {
      * @return A rectangular [Vec3] for the phone's orientation.
      */
     fun getVector(): Vec3 {
-        return Mat4.rotationZ(-azimuth) * Mat4.rotationY(-pitch) * Mat4.rotationX(roll) * -AXIS_Z
+        return Mat4.rotationZ(-azimuth) * Mat4.rotationY(-pitch) * Mat4.rotationX(-roll) * -AXIS_Z
     }
 
     /**
@@ -35,11 +36,44 @@ class OrientationData(val azimuth: Float, val pitch: Float, val roll: Float) {
      * @return An [ArrayTriple] of the 3 axes.
      */
     fun getAxes(): ArrayTriple<Vec3> {
-        val mat = Mat4.rotationZ(-azimuth) * Mat4.rotationY(-pitch) * Mat4.rotationX(roll)
+        val mat = Mat4.rotationZ(-azimuth) * Mat4.rotationY(-pitch) * Mat4.rotationX(-roll)
         return ArrayTriple(
             mat * AXIS_X,
             mat * AXIS_Y,
             mat * AXIS_Z
+        )
+    }
+
+    // Convenience for interpolation
+    operator fun plus(o: OrientationData): OrientationData {
+        return OrientationData(
+            azimuth + o.azimuth,
+            pitch + o.pitch,
+            roll + o.roll
+        )
+    }
+
+    operator fun minus(o: OrientationData): OrientationData {
+        return OrientationData(
+            azimuth - o.azimuth,
+            pitch - o.pitch,
+            roll - o.roll
+        )
+    }
+
+    operator fun times(s: Number): OrientationData {
+        return OrientationData(
+            azimuth * s.toFloat(),
+            pitch * s.toFloat(),
+            roll * s.toFloat()
+        )
+    }
+
+    operator fun div(s: Number): OrientationData {
+        return OrientationData(
+            azimuth / s.toFloat(),
+            pitch / s.toFloat(),
+            roll / s.toFloat()
         )
     }
 }

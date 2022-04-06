@@ -1,5 +1,6 @@
 package com.example.astroview.math
 
+import com.example.astroview.core.CoreConstants
 import com.example.astroview.util.Intersection
 
 /**
@@ -24,27 +25,22 @@ class SphericalCap(centerVector: Vec3, private val cosLimit: Double) {
         )
         testPoints.sortedByDescending { dot(it) }
 
+        if (contains(testPoints[2])) {
+            // Totally in cap
+            return Intersection.COMPLETELY
+        } else if (contains(testPoints[0]) || contains(other.c0 + other.c1 + other.c2)) {
+            // Already found an intersection
+            return Intersection.PARTIALLY
+        }
 
-        testPoints
-
-        var allInCap = true
-        var oneInCap = false
+        MathUtils.genLine(testPoints, CoreConstants.MAX_SPLIT)
 
         for (point in testPoints) {
-            val pointInCap = contains(point)
-            allInCap = allInCap && pointInCap
-            oneInCap = oneInCap || pointInCap
+            if (contains(point)) {
+                return Intersection.PARTIALLY
+            }
         }
 
-        return if (allInCap) {
-            // Totally in cap
-            Intersection.COMPLETELY
-        } else if (!oneInCap && !other.contains(centerVector)) {
-            // Not in cap
-            Intersection.NONE
-        } else {
-            // Partially in cap
-            Intersection.PARTIALLY
-        }
+        return Intersection.NONE
     }
 }

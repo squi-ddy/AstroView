@@ -1,6 +1,6 @@
 package com.example.astroview.projection
 
-import android.util.Log
+import com.example.astroview.core.CoreConstants
 import com.example.astroview.math.SphericalCap
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
@@ -200,7 +200,7 @@ class GeodesicGrid(val maxLevel: Int) {
     ) {
         val maxVisitLevel = min(maxVisLevel, maxLevel)
         val zonesToSearch = arrayListOf(arrayListOf<Int>())
-        getZonesForCap(maxVisitLevel, SphericalCap(v, cosLimFov), zonesToSearch)
+        getZonesForCap(maxVisitLevel, SphericalCap(v, CoreConstants.CAP_COS_FOV), zonesToSearch)
         for (level in zonesToSearch.indices) {
             for (zone in zonesToSearch[level]) {
                 context.searchAround(level, zone, v, cosLimFov, resultList)

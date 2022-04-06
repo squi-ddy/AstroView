@@ -13,27 +13,44 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/star_canvas">
+            android:id="@+id/star_canvas"
+            android:background="@drawable/border"
+            android:padding="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/canvas_container">
 
             <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:id="@+id/star_view"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/star_viewport_north"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
+                <TextView
+                        android:text="N"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/star"
-                        android:id="@+id/imageView2"
-                        android:translationX="1000dp" />
+                        android:id="@+id/north_pointer"
+                        android:textColor="@color/white"
+                        android:rotation="-90" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/star_viewport">
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/star"
+                            android:id="@+id/imageView2"
+                            android:translationX="1000dp" />
+                </RelativeLayout>
             </RelativeLayout>
 
             <ImageView

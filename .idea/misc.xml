@@ -3,15 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/drawable/star.xml" value="0.137" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/activity_account.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/activity_main.xml" value="0.1265625" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/fragment_star_canvas.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/border.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/circle_border.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/star.xml" value="0.203" />
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.1953125" />
         <entry key="app/src/main/res/layout/fragment_help_page.xml" value="0.1953125" />
-        <entry key="app/src/main/res/layout/fragment_star_canvas.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout/fragment_star_canvas.xml" value="0.9" />
         <entry key="app/src/main/res/layout/fragment_star_info.xml" value="0.390625" />
       </map>
     </option>

@@ -69,11 +69,11 @@ class ZoneArray(val zones: Array<ZoneData>, val level: Int, val magMin: Int, val
     }
 
     /**
-     * Returns the magnitude of a star in this ZoneArray.
+     * Returns the V magnitude of a star in this ZoneArray.
      * @param s Star to get magnitude for
      * @return The star's magnitude
      */
-    fun getStarMagnitude(s: Star): Double {
+    fun getVMagnitude(s: Star): Double {
         return (s.getMag() * magStep + magMin) / 1000.0
     }
 }

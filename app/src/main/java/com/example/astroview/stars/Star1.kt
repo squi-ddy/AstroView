@@ -59,7 +59,7 @@ class Star1(bytes: ByteArray) : Star(bytes) {
         return ByteConverter.bytesToInt(bytes.slice(8..11), true).toUInt().toInt()
     }
 
-    override fun getBV(): Int {
+    override fun getBVIndex(): Int {
         return getByte(12).toInt()
     }
 

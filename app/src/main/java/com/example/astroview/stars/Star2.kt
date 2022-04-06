@@ -44,7 +44,7 @@ class Star2(bytes: ByteArray) : Star(bytes) {
             .toInt()
     }
 
-    override fun getBV(): Int {
+    override fun getBVIndex(): Int {
         return getByte(8).toUInt().shr(4).or(getByte(9).toUInt().and(0x1Fu).shl(4)).toInt()
     }
 

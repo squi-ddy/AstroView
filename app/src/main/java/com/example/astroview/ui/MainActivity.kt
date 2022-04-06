@@ -15,10 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.astroview.astro.Coordinates
 import com.example.astroview.astro.OrientationData
 import com.example.astroview.core.AppViewModel
-import com.example.astroview.core.CoreConstants
 import com.example.astroview.databinding.ActivityMainBinding
-import kotlin.math.PI
-import kotlin.text.Typography.degree
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var binding: ActivityMainBinding
@@ -65,29 +62,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         Coordinates.lat = lastKnownLocation?.latitude ?: 0.0
         Coordinates.long = lastKnownLocation?.longitude ?: 0.0
         Coordinates.updateMatrices()
-
-        viewModel.orientation.observe(this) {
-            val stars = viewModel.core.getStarsInViewport(
-                it.getVector(),
-                CoreConstants.COS_LIMIT_FOV
-            )
-            stars.sortedBy { s -> viewModel.core.getMagnitude(s.star, s.level) }
-            viewModel.projectedStars.value = viewModel.core.projectStars(
-                stars,
-                it.getAxes(),
-                CoreConstants.RADIUS.toDouble(),
-                CoreConstants.COS_LIMIT_FOV
-            )
-            /*binding.sensorData.text =
-                "Azimuth: ${it.azimuth / PI * 180}$degree\nPitch: ${it.pitch / PI * 180}$degree\nRoll: ${it.roll / PI * 180}$degree" +
-                        "\nVector: ${it.getVector()}\nBrightest star: ${
-                            if (stars.size > 0) {
-                                viewModel.core.getMagnitude(stars[0].star, stars[0].level)
-                            } else {
-                                "No stars"
-                            }
-                        }\nNo. of stars: ${viewModel.projectedStars.value!!.size}"*/
-        }
     }
 
     override fun onRequestPermissionsResult(
@@ -182,8 +156,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         // "orientationAngles" now has up-to-date information.
 
-        viewModel.orientation.value =
+        viewModel.addOrientation(
             OrientationData(orientationAngles[0], orientationAngles[1], orientationAngles[2])
+        )
 
         Coordinates.updateMatrices()
     }

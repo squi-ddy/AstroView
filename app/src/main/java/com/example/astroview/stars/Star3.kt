@@ -28,7 +28,7 @@ class Star3(bytes: ByteArray): Star(bytes) {
         return getByte(2).toUInt().shr(2).or(getByte(3).toUInt().shl(6)).or(getByte(4).toUInt().and(0xFu).shl(14)).toInt()
     }
 
-    override fun getBV(): Int {
+    override fun getBVIndex(): Int {
         return getByte(4).toUInt().shr(4).or(getByte(5).toUInt().and(0x7u).shl(4)).toInt()
     }
 
