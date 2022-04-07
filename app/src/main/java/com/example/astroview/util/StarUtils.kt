@@ -1,6 +1,9 @@
 package com.example.astroview.util
 
-import com.example.astroview.stars.*
+import com.example.astroview.stars.data.Star
+import com.example.astroview.stars.data.Star1
+import com.example.astroview.stars.data.Star2
+import com.example.astroview.stars.data.Star3
 
 object StarUtils {
     const val noStarTypes = 3
@@ -48,5 +51,15 @@ object StarUtils {
      */
     fun getBV(star: Star): Double {
         return star.getBVIndex() * (4.0 / 127) - 0.5
+    }
+
+    /**
+     * Retrieves the star's Hipparcos Index.
+     * @param star The star to find Hipparcos Index for
+     * @return The Hipparcos Index, or -1 if it is not on the list.
+     */
+    fun getHipparcosIndex(star: Star): Int {
+        if (star !is Star1) return -1
+        return star.getHip()
     }
 }

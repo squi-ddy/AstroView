@@ -14,4 +14,13 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="Theme.AstroView.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AstroView.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.AstroView.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

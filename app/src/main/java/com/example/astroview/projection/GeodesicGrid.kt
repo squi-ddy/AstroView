@@ -4,7 +4,7 @@ import com.example.astroview.core.CoreConstants
 import com.example.astroview.math.SphericalCap
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
-import com.example.astroview.stars.DetailedStar
+import com.example.astroview.stars.data.DetailedStar
 import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
 import com.example.astroview.util.Intersection

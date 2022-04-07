@@ -2,7 +2,7 @@ package com.example.astroview.core
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
+import android.graphics.PorterDuff
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -13,16 +13,13 @@ import com.example.astroview.math.Vec2
 import com.example.astroview.math.Vec3
 import com.example.astroview.phys.WavelengthConverter
 import com.example.astroview.projection.GeodesicGrid
-import com.example.astroview.stars.DetailedStar
-import com.example.astroview.stars.ProjectedStar
-import com.example.astroview.stars.Star
+import com.example.astroview.stars.data.DetailedStar
+import com.example.astroview.stars.data.ProjectedStar
+import com.example.astroview.stars.data.Star
 import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
 import com.example.astroview.util.StarUtils
-import kotlin.math.PI
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 class CoreInterface private constructor() {
     private var geodesicGrid: GeodesicGrid? = null
@@ -129,8 +126,6 @@ class CoreInterface private constructor() {
         val renderedStar = ImageView(context)
         renderedStar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.star))
         setStarSize(renderedStar)
-        // TODO: set transparency
-        // TODO: set color
         setStarColour(renderedStar, star)
         renderedStar.translationX = (star.position.x + r - renderedStar.width / 2).toFloat()
         renderedStar.translationY = (star.position.y + r - renderedStar.height / 2).toFloat()
@@ -175,24 +170,54 @@ class CoreInterface private constructor() {
     }
 
     /**
+     * Gets an opacity based on the visible flux of the star.
+     * @param flux Star's magnitude flux.
+     */
+    private fun getOpacityFromFlux(flux: Double): Double {
+        return min(
+            1.0,
+            exp(flux / 2 * CoreConstants.FLUX_FACTOR) / E.pow(CoreConstants.FLUX_FACTOR)
+        )
+    }
+
+    /**
      * Set the colour of a star given its B-V value.
      * @param renderedStar The ImageView of the star.
      * @param star The actual star object.
      */
-    fun setStarColour(renderedStar: ImageView, star: ProjectedStar) {
+    private fun setStarColour(renderedStar: ImageView, star: ProjectedStar) {
         val bV = StarUtils.getBV(star.star.star)
         val fluxV = 1.0
         val fluxB = magBaseline.pow(bV) * fluxV
-        Log.e("sus", "$fluxV $fluxB")
         val rgb = WavelengthConverter.calculateRGB(
             (fluxV * CoreConstants.FILTER_V_WAVELENGTH + fluxB * CoreConstants.FILTER_B_WAVELENGTH) / (fluxV + fluxB)
         )
         // Whitewash the colour
         val rgbWhitewash = ArrayTriple(
-            min(255.0, rgb[0] * (fluxB + fluxV).pow(CoreConstants.WHITEWASH_FACTOR)),
-            min(255.0, rgb[1] * (fluxB + fluxV).pow(CoreConstants.WHITEWASH_FACTOR)),
-            min(255.0, rgb[2] * (fluxB + fluxV).pow(CoreConstants.WHITEWASH_FACTOR))
+            min(
+                255.0,
+                rgb[0] * 0.72 * CoreConstants.WHITEWASH_FACTOR.pow(fluxB + fluxV) +
+                        (CoreConstants.WHITEWASH_BASELINE * 0.72).pow(fluxB + fluxV)
+            ),
+            min(
+                255.0,
+                rgb[1] * 0.78 * CoreConstants.WHITEWASH_FACTOR.pow(fluxB + fluxV) +
+                        (CoreConstants.WHITEWASH_BASELINE * 0.78).pow(fluxB + fluxV)
+            ),
+            min(
+                255.0,
+                rgb[2] * CoreConstants.WHITEWASH_FACTOR.pow(fluxB + fluxV) +
+                        CoreConstants.WHITEWASH_BASELINE.pow(fluxB + fluxV)
+            )
         )
-        renderedStar.setColorFilter(Color.rgb(rgbWhitewash[0].toFloat(), rgbWhitewash[1].toFloat(), rgbWhitewash[2].toFloat()))
+        renderedStar.alpha = getOpacityFromFlux(fluxV + fluxB).toFloat()
+        renderedStar.setColorFilter(
+            Color.rgb(
+                rgbWhitewash[0].toInt(),
+                rgbWhitewash[1].toInt(),
+                rgbWhitewash[2].toInt()
+            ),
+            PorterDuff.Mode.ADD
+        )
     }
 }

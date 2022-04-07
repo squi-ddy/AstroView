@@ -1,6 +1,7 @@
 package com.example.astroview.stars
 
 import com.example.astroview.math.Vec3
+import com.example.astroview.stars.data.Star
 
 class ZoneData(
     val stars: Array<Star>,

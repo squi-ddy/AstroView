@@ -1,6 +1,7 @@
-package com.example.astroview.stars
+package com.example.astroview.stars.data
 
 import com.example.astroview.math.Vec3
+import com.example.astroview.stars.ZoneData
 
 class Star2(bytes: ByteArray) : Star(bytes) {
     /*

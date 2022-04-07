@@ -4,8 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.astroview.astro.OrientationData
-import com.example.astroview.stars.ProjectedStar
-import java.util.*
+import com.example.astroview.stars.data.ProjectedStar
 import kotlin.collections.ArrayDeque
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {

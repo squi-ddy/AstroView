@@ -3,6 +3,8 @@ package com.example.astroview.stars
 import com.example.astroview.astro.Time
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
+import com.example.astroview.stars.data.DetailedStar
+import com.example.astroview.stars.data.Star
 import com.example.astroview.util.StarUtils
 import kotlin.math.PI
 import kotlin.math.abs

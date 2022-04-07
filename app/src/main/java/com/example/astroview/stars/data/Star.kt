@@ -1,6 +1,8 @@
-package com.example.astroview.stars
+package com.example.astroview.stars.data
 
+import android.os.Parcelable
 import com.example.astroview.math.Vec3
+import com.example.astroview.stars.ZoneData
 
 abstract class Star(val bytes: ByteArray) {
     /**

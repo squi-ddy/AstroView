@@ -1,4 +1,4 @@
-package com.example.astroview.stars
+package com.example.astroview.stars.data
 
 import com.example.astroview.math.Vec2
 

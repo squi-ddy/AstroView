@@ -5,6 +5,9 @@ import com.example.astroview.R
 import com.example.astroview.core.CoreInterface
 import com.example.astroview.math.Triangle
 import com.example.astroview.math.Vec3
+import com.example.astroview.stars.data.DetailedStar
+import com.example.astroview.stars.data.Star
+import java.util.*
 
 class StarManager(private val context: Context) {
     companion object {
@@ -13,12 +16,13 @@ class StarManager(private val context: Context) {
         // Only using 1 due to memory reasons
         private val files = arrayOf(
             R.raw.stars_0_0v0_8,
-            R.raw.stars_1_0v0_8,
+            // R.raw.stars_1_0v0_8,
             // R.raw.stars_2_0v0_8
         )
     }
 
-    val gridLevels = arrayListOf<ZoneArray>()
+    private val names = mutableMapOf<Int, String>()
+    private val gridLevels = arrayListOf<ZoneArray>()
 
     fun init(core: CoreInterface) {
         if (initialised) throw IllegalStateException("StarManager already initialised")
@@ -39,7 +43,22 @@ class StarManager(private val context: Context) {
             z.scaleAxis()
         }
 
+        readNames()
+
         core.starManager = this
+    }
+
+    private fun readNames() {
+        val scanner = Scanner(context.resources.openRawResource(R.raw.extra_names))
+        while (scanner.hasNext()) {
+            val line = scanner.nextLine().trim()
+            val (hip, name) = line.split('|')
+            names[hip.toInt()] = name.replace('_', ' ')
+        }
+    }
+
+    fun getName(hip: Int): String? {
+        return names[hip]
     }
 
     fun initTriangle(level: Int, index: Int, t: Triangle) {

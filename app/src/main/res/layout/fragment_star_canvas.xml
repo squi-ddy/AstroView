@@ -49,7 +49,10 @@
                             android:layout_height="wrap_content"
                             app:srcCompat="@drawable/star"
                             android:id="@+id/imageView2"
-                            android:translationX="1000dp" />
+                            tools:layout_width="50dp"
+                            tools:layout_height="50dp"
+                            android:tintMode="add"
+                            app:tint="@color/purple_200" />
                 </RelativeLayout>
             </RelativeLayout>
 
