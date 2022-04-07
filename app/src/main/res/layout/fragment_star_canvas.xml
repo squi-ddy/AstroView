@@ -52,7 +52,8 @@
                             tools:layout_width="50dp"
                             tools:layout_height="50dp"
                             android:tintMode="add"
-                            app:tint="@color/purple_200" />
+                            app:tint="#00FF0000"
+                            android:alpha="0.6" />
                 </RelativeLayout>
             </RelativeLayout>
 

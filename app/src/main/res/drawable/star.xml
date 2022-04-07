@@ -1,20 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-            android:top="4dp"
-            android:right="4dp"
-            android:bottom="4dp"
-            android:left="4dp">
-        <shape
-                android:shape="oval">
-            <solid android:color="#4d4d4d" />
-        </shape>
-    </item>
-    <item>
-        <shape
-                android:shape="oval">
-            <stroke android:width="2dp"
-                    android:color="#4d4d4d"/>
-        </shape>
-    </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:width="10dp"
+        android:height="10dp"
+        android:viewportWidth="10"
+        android:viewportHeight="10">
+    <path
+            android:pathData="M5,5m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                    android:gradientRadius="5"
+                    android:centerX="5"
+                    android:centerY="5"
+                    android:type="radial">
+                <item android:offset="0" android:color="#FFFFFFFF"/>
+                <item android:offset="0.7" android:color="#CCCCCCCC"/>
+                <item android:offset="1" android:color="#00555555"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

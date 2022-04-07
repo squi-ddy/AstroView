@@ -3,22 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/drawable/ic_gradient.xml" value="0.2265" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/drawable/star.xml" value="0.137" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/drawable/starsvg.xml" value="0.2265" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/activity_info.xml" value="0.1265625" />
         <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/activity_main.xml" value="0.1265625" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/content_info.xml" value="0.1265625" />
-        <entry key="..\:/Users/Squiddy/AndroidStudioProjects/AstroView/app/src/main/res/layout/fragment_star_canvas.xml" value="0.38717339667458434" />
         <entry key="app/src/main/res/drawable/border.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/circle_border.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/ic_gradient.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/star.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/star_test.xml" value="0.2825" />
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.375" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1953125" />
         <entry key="app/src/main/res/layout/fragment_help_page.xml" value="0.1953125" />
-        <entry key="app/src/main/res/layout/fragment_star_canvas.xml" value="0.9" />
+        <entry key="app/src/main/res/layout/fragment_star_canvas.xml" value="1.25" />
         <entry key="app/src/main/res/layout/fragment_star_info.xml" value="0.390625" />
       </map>
     </option>

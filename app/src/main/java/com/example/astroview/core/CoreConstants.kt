@@ -8,11 +8,8 @@ object CoreConstants {
     const val MAX_SPLIT = 4
     const val INTERPOLATE_SIZE = 10
     const val VIEWPORT_MARGINS = 50
+    const val VIEWPORT_RENDER_MARGIN = 20
     const val NORTH_RADIUS = 525
     const val NORTH_TEXT_SIZE = 15
-    const val FILTER_B_WAVELENGTH = 445
-    const val FILTER_V_WAVELENGTH = 620
-    const val WHITEWASH_FACTOR = 1.5
-    const val WHITEWASH_BASELINE = 20.0
-    const val FLUX_FACTOR = 2
+    const val FLUX_FACTOR = 1
 }

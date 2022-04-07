@@ -1,6 +1,7 @@
 package com.example.astroview.phys
 
 import com.example.astroview.util.ArrayTriple
+import kotlin.math.exp
 import kotlin.math.floor
 import kotlin.math.pow
 
@@ -264,13 +265,45 @@ object WavelengthConverter {
         0.000000
     )
 
-    private val MATRIX_SRGB_D65 = arrayOf(
+    private val MAT_XYZ_TO_RGB = arrayOf(
         3.2404542, -1.5371385, -0.4985314,
         -0.9692660, 1.8760108, 0.0415560,
         0.0556434, -0.2040259, 1.0572252
     )
 
-    fun calculateRGB(wavelength: Double): ArrayTriple<Double> {
+    private val H = 6.62607015e-34
+    private val C = 299792458.0
+    private val K_B = 1.380649e-23
+
+    fun calculateRGBFromTemperature(temp: Double): ArrayTriple<Double> {
+        val wLenBase = 350.0
+        val wLenStep = 4.5
+        var rgbSum = ArrayTriple(0.0, 0.0, 0.0)
+        var totalWt = 0.0
+        for (i in 0..100) {
+            val wLen = wLenBase + wLenStep * i
+            val wt = getPlanckSpectrum(wLen, temp)
+            val rgb = calculateRGBFromWavelength(wLen)
+            totalWt += wt
+            rgbSum = ArrayTriple(
+                rgbSum[0] + wt * rgb[0],
+                rgbSum[1] + wt * rgb[1],
+                rgbSum[2] + wt * rgb[2]
+            )
+        }
+        return ArrayTriple(
+            255 * clip(gammaCorrectSRGB(rgbSum[0] / totalWt)),
+            255 * clip(gammaCorrectSRGB(rgbSum[1] / totalWt)),
+            255 * clip(gammaCorrectSRGB(rgbSum[2] / totalWt))
+        )
+    }
+
+    fun getPlanckSpectrum(wavelength: Double, temp: Double): Double {
+        val wLen = wavelength * 1e-9
+        return 2 * H * C * C / (wLen.pow(5) * (exp(H * C / wLen / K_B / temp) - 1))
+    }
+
+    fun calculateRGBFromWavelength(wavelength: Double): ArrayTriple<Double> {
         if (wavelength < LEN_MIN || wavelength > LEN_MAX)
             return ArrayTriple(0.0, 0.0, 0.0)
 
@@ -283,21 +316,17 @@ object WavelengthConverter {
         val y = interpolate(Y, index, offset)
         val z = interpolate(Z, index, offset)
 
-        val m = MATRIX_SRGB_D65
+        val m = MAT_XYZ_TO_RGB
 
         var r = m[0] * x + m[1] * y + m[2] * z
         var g = m[3] * x + m[4] * y + m[5] * z
         var b = m[6] * x + m[7] * y + m[8] * z
 
-        r = clip(gammaCorrectSRGB(r))
-        g = clip(gammaCorrectSRGB(g))
-        b = clip(gammaCorrectSRGB(b))
+        r = clip(r)
+        g = clip(g)
+        b = clip(b)
 
-        return ArrayTriple(
-            255 * r,
-            255 * g,
-            255 * b
-        )
+        return ArrayTriple(r, g, b)
     }
 
     private fun interpolate(values: Array<Double>, index: Int, offset: Double): Double {

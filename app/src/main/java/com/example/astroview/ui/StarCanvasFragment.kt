@@ -50,7 +50,8 @@ class StarCanvasFragment : Fragment() {
                 val starImage = viewModel.core.renderStar(
                     requireContext(),
                     star,
-                    CoreConstants.VIEWPORT_RADIUS.toDouble()
+                    CoreConstants.VIEWPORT_RADIUS.toDouble(),
+                    CoreConstants.VIEWPORT_RENDER_MARGIN.toDouble()
                 ) ?: continue
                 binding.starViewport.addView(starImage)
             }

@@ -1,8 +1,8 @@
 package com.example.astroview.core
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -11,12 +11,13 @@ import com.example.astroview.astro.Coordinates
 import com.example.astroview.astro.OrientationData
 import com.example.astroview.math.Vec2
 import com.example.astroview.math.Vec3
+import com.example.astroview.phys.TemperatureConverter
 import com.example.astroview.phys.WavelengthConverter
 import com.example.astroview.projection.GeodesicGrid
+import com.example.astroview.stars.StarManager
 import com.example.astroview.stars.data.DetailedStar
 import com.example.astroview.stars.data.ProjectedStar
 import com.example.astroview.stars.data.Star
-import com.example.astroview.stars.StarManager
 import com.example.astroview.util.ArrayTriple
 import com.example.astroview.util.StarUtils
 import kotlin.math.*
@@ -117,15 +118,17 @@ class CoreInterface private constructor() {
      * @param context the current context.
      * @param star the star to render.
      * @param r the viewport's radius.
+     * @param margin Margin around the viewport where stars should start disappearing.
      * @return ImageView representing the star.
      */
-    fun renderStar(context: Context, star: ProjectedStar, r: Double): ImageView? {
-        if (star.position.magSquared >= r * r) {
-            return null
-        }
+    fun renderStar(context: Context, star: ProjectedStar, r: Double, margin: Double): ImageView? {
         val renderedStar = ImageView(context)
         renderedStar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.star))
         setStarSize(renderedStar)
+        if (star.position.magSquared >= (r - margin) * (r - margin)
+        ) {
+            return null
+        }
         setStarColour(renderedStar, star)
         renderedStar.translationX = (star.position.x + r - renderedStar.width / 2).toFloat()
         renderedStar.translationY = (star.position.y + r - renderedStar.height / 2).toFloat()
@@ -176,7 +179,7 @@ class CoreInterface private constructor() {
     private fun getOpacityFromFlux(flux: Double): Double {
         return min(
             1.0,
-            exp(flux / 2 * CoreConstants.FLUX_FACTOR) / E.pow(CoreConstants.FLUX_FACTOR)
+            exp((flux / 2 - 1) * CoreConstants.FLUX_FACTOR)
         )
     }
 
@@ -189,35 +192,16 @@ class CoreInterface private constructor() {
         val bV = StarUtils.getBV(star.star.star)
         val fluxV = 1.0
         val fluxB = magBaseline.pow(bV) * fluxV
-        val rgb = WavelengthConverter.calculateRGB(
-            (fluxV * CoreConstants.FILTER_V_WAVELENGTH + fluxB * CoreConstants.FILTER_B_WAVELENGTH) / (fluxV + fluxB)
-        )
-        // Whitewash the colour
-        val rgbWhitewash = ArrayTriple(
-            min(
-                255.0,
-                rgb[0] * 0.72 * CoreConstants.WHITEWASH_FACTOR.pow(fluxB + fluxV) +
-                        (CoreConstants.WHITEWASH_BASELINE * 0.72).pow(fluxB + fluxV)
-            ),
-            min(
-                255.0,
-                rgb[1] * 0.78 * CoreConstants.WHITEWASH_FACTOR.pow(fluxB + fluxV) +
-                        (CoreConstants.WHITEWASH_BASELINE * 0.78).pow(fluxB + fluxV)
-            ),
-            min(
-                255.0,
-                rgb[2] * CoreConstants.WHITEWASH_FACTOR.pow(fluxB + fluxV) +
-                        CoreConstants.WHITEWASH_BASELINE.pow(fluxB + fluxV)
+        val temp = TemperatureConverter.bVToTemperature(bV)
+        val rgb = WavelengthConverter.calculateRGBFromTemperature(temp)
+        val filter = ColorMatrix(
+            floatArrayOf(
+                0f, 0f, 0f, 0f, rgb[0].toFloat(),
+                0f, 0f, 0f, 0f, rgb[1].toFloat(),
+                0f, 0f, 0f, 0f, rgb[2].toFloat(),
+                0f, 0f, 0f, getOpacityFromFlux(fluxV + fluxB).toFloat(), 0f
             )
         )
-        renderedStar.alpha = getOpacityFromFlux(fluxV + fluxB).toFloat()
-        renderedStar.setColorFilter(
-            Color.rgb(
-                rgbWhitewash[0].toInt(),
-                rgbWhitewash[1].toInt(),
-                rgbWhitewash[2].toInt()
-            ),
-            PorterDuff.Mode.ADD
-        )
+        renderedStar.colorFilter = ColorMatrixColorFilter(filter)
     }
 }
