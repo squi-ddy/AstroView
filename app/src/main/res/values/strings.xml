@@ -12,4 +12,10 @@
     <string name="comments_title">Comments</string>
     <string name="add_comment_prompt">Add Comment</string>
     <string name="delete_account_prompt">Delete</string>
+    <string name="menu_gyro_lock">Lock Stars</string>
+    <string name="menu_user">Manage Account</string>
+    <string name="permission_refused_message">We need location permissions in order to accurately display stars around you.</string>
+    <string name="permission_refused_positive">OK</string>
+    <string name="star_map_title">Star Map</string>
+    <string name="star_map_north">N</string>
 </resources>

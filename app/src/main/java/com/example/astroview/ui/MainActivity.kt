@@ -1,6 +1,7 @@
 package com.example.astroview.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -10,14 +11,24 @@ import android.hardware.SensorManager
 import android.location.Criteria
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.astroview.astro.Coordinates
-import com.example.astroview.astro.OrientationData
-import com.example.astroview.core.AppViewModel
+import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.astroview.R
+import com.example.astroview.data.AppViewModel
 import com.example.astroview.databinding.ActivityMainBinding
+import com.example.astroview.starmap.astro.Coordinates
+import com.example.astroview.starmap.astro.OrientationData
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel by viewModels<AppViewModel>()
@@ -40,18 +51,37 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         setSupportActionBar(binding.toolbar)
 
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        binding.fab.show()
+
+        binding.fab.setOnClickListener {
+            findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.action_starCanvasFragment_to_loginFragment)
+            binding.fab.hide()
+        }
+
+        viewModel.updateOrientation.observe(this) { update ->
+            if (update) registerSensors() else (sensorManager.unregisterListener(this))
+        }
+
+        if (!permissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
         } else {
-            createUi()
+            useLocationPerms()
         }
     }
 
-    private fun createUi() {
-        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private fun permissionGranted(permission: String): Boolean {
+        return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun useLocationPerms() {
+        if (!permissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             // ???
             throw IllegalStateException("idk what how")
         }
@@ -60,7 +90,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Criteria(), true
         ) ?: throw IllegalStateException("No provider????")
 
+        // Android Studio is stupid lmao
+        @SuppressLint("MissingPermission")
         val lastKnownLocation = locationManager.getLastKnownLocation(bestProvider)
+
         Coordinates.lat = lastKnownLocation?.latitude ?: 0.0
         Coordinates.long = lastKnownLocation?.longitude ?: 0.0
         Coordinates.updateMatrices()
@@ -75,10 +108,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         when (requestCode) {
             1 -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    createUi()
+                    useLocationPerms()
                 } else {
-                    // crash the app lmao
-                    throw IllegalStateException("pls give permission :(")
+                    AlertDialog.Builder(
+                        this,
+                        android.R.style.Theme_Material_Dialog_NoActionBar
+                    ).apply {
+                        setMessage(R.string.permission_refused_message)
+                        setPositiveButton(R.string.permission_refused_positive) { _, _ ->
+                            // at this point, requesting does nothing.
+                        }
+                        show()
+                    }
                 }
             }
         }
@@ -100,11 +141,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // the application receives an update before the system checks the sensor
         // readings again.
 
+        if (viewModel.updateOrientation.value!!) registerSensors()
+    }
+
+    private fun registerSensors() {
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
             sensorManager.registerListener(
                 this,
                 accelerometer,
-                SensorManager.SENSOR_DELAY_NORMAL,
                 SensorManager.SENSOR_DELAY_UI
             )
         }
@@ -112,7 +156,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             sensorManager.registerListener(
                 this,
                 magneticField,
-                SensorManager.SENSOR_DELAY_NORMAL,
                 SensorManager.SENSOR_DELAY_UI
             )
         }
@@ -122,7 +165,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onPause()
 
         // Don't receive any more updates from either sensor.
-        sensorManager.unregisterListener(this)
+        if (viewModel.updateOrientation.value!!) sensorManager.unregisterListener(this)
     }
 
     // Get readings from accelerometer and magnetometer. To simplify calculations,
@@ -163,6 +206,43 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         )
 
         Coordinates.updateMatrices()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        super.onPrepareOptionsMenu(menu)
+        val lockGyro = menu.findItem(R.id.menu_gyro_lock)
+        lockGyro.isVisible = true
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_gyro_lock -> {
+                viewModel.updateOrientation.value = !viewModel.updateOrientation.value!!
+                if (viewModel.updateOrientation.value!!) {
+                    item.icon = ContextCompat.getDrawable(
+                        this,
+                        R.drawable.ic_baseline_screen_lock_rotation_24
+                    )
+                } else {
+                    item.icon =
+                        ContextCompat.getDrawable(this, R.drawable.ic_baseline_screen_rotation_24)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 
 }

@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="star_map_radius">500dp</dimen>
+    <dimen name="star_map_size">1000dp</dimen>
+    <dimen name="star_map_render_radius">490dp</dimen>
+    <dimen name="star_size">5dp</dimen>
 </resources>

@@ -7,6 +7,18 @@
     <fragment
             android:id="@+id/starCanvasFragment"
             android:name="com.example.astroview.ui.StarCanvasFragment"
-            android:label="StarCanvasFragment" />
+            android:label="AstroView">
+        <action
+                android:id="@+id/action_starCanvasFragment_to_loginFragment"
+                app:destination="@id/loginFragment"
+                app:enterAnim="@anim/slide_in_bottom"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_bottom" />
+    </fragment>
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.example.astroview.ui.LoginFragment"
+            android:label="AstroView" />
 
 </navigation>
