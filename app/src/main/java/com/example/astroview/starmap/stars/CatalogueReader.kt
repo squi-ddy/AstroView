@@ -14,7 +14,7 @@ class CatalogueReader(private val stream: InputStream) {
         private const val FILE_MAGIC_NATIVE = 0x835f040bL
     }
 
-    fun read(): ZoneArray {
+    fun read(manager: StarManager): ZoneArray {
         val bytes = ByteArray(4)
         stream.read(bytes)
         magic = ByteConverter.bytesToInt(bytes, isLittleEndian)
@@ -53,7 +53,7 @@ class CatalogueReader(private val stream: InputStream) {
             ZoneData(
                 Array(zoneSizes[i]) {
                     stream.read(starBytes)
-                    StarUtils.createStar(starBytes.clone())
+                    StarUtils.createStar(manager, starBytes.clone())
                 },
                 zoneSizes[i]
             )

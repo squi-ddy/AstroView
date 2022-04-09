@@ -8,9 +8,13 @@ import com.example.astroview.starmap.stars.data.Star3
 object StarUtils {
     const val noStarTypes = 3
 
-    fun createStar(type: Long, bytes: ByteArray): Star {
+    fun createStar(manager: StarManager, type: Long, bytes: ByteArray): Star {
         return when (type) {
-            0L -> Star1(bytes)
+            0L -> {
+                val star = Star1(bytes)
+                manager.associateHipparcos(star.getHip(), star)
+                star
+            }
             1L -> Star2(bytes)
             2L -> Star3(bytes)
             else -> throw IllegalArgumentException("No star of type $type")
@@ -26,12 +30,12 @@ object StarUtils {
         }
     }
 
-    fun createStar(bytes: ByteArray): Star {
+    fun createStar(manager: StarManager, bytes: ByteArray): Star {
         // infer from length
         return when (bytes.size) {
-            Star1.byteCount -> createStar(0L, bytes)
-            Star2.byteCount -> createStar(1L, bytes)
-            Star3.byteCount -> createStar(2L, bytes)
+            Star1.byteCount -> createStar(manager, 0L, bytes)
+            Star2.byteCount -> createStar(manager, 1L, bytes)
+            Star3.byteCount -> createStar(manager, 2L, bytes)
             else -> throw IllegalArgumentException("No star with ${bytes.size} bytes")
         }
     }

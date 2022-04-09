@@ -6,6 +6,7 @@ import com.example.astroview.starmap.core.CoreInterface
 import com.example.astroview.starmap.math.Triangle
 import com.example.astroview.starmap.math.Vec3
 import com.example.astroview.starmap.stars.data.DetailedStar
+import com.example.astroview.starmap.stars.data.HipparcosStar
 import com.example.astroview.starmap.stars.data.Star
 import java.util.*
 
@@ -22,13 +23,14 @@ class StarManager(private val context: Context) {
     }
 
     private val names = mutableMapOf<Int, String>()
+    private val hipparcosStars = mutableMapOf<Int, Star>()
     private val gridLevels = arrayListOf<ZoneArray>()
 
     fun init(core: CoreInterface) {
         if (initialised) throw IllegalStateException("StarManager already initialised")
 
         for (i in files.indices) {
-            val za = CatalogueReader(context.resources.openRawResource(files[i])).read()
+            val za = CatalogueReader(context.resources.openRawResource(files[i])).read(this)
             if (za.level < gridLevels.size) {
                 throw IllegalStateException("Duplicated level")
             } else if (za.level != gridLevels.size) {
@@ -49,16 +51,22 @@ class StarManager(private val context: Context) {
     }
 
     private fun readNames() {
-        val scanner = Scanner(context.resources.openRawResource(R.raw.extra_names))
+        val scanner = Scanner(context.resources.openRawResource(R.raw.names))
         while (scanner.hasNext()) {
             val line = scanner.nextLine().trim()
             val (hip, name) = line.split('|')
-            names[hip.toInt()] = name.replace('_', ' ')
+            if (names[hip.toInt()] == null) {
+                names[hip.toInt()] = name.replace('_', ' ')
+            }
         }
     }
 
-    fun getName(hip: Int): String? {
-        return names[hip]
+    fun getHipparcosStar(hip: Int): HipparcosStar? {
+        return HipparcosStar(hipparcosStars[hip] ?: return null, names[hip] ?: return null)
+    }
+
+    fun associateHipparcos(hip: Int, star: Star) {
+        hipparcosStars[hip] = star
     }
 
     fun initTriangle(level: Int, index: Int, t: Triangle) {

@@ -8,4 +8,5 @@
     <dimen name="star_map_size">1000dp</dimen>
     <dimen name="star_map_render_radius">490dp</dimen>
     <dimen name="star_size">5dp</dimen>
+    <dimen name="star_size_border">7dp</dimen>
 </resources>

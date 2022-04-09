@@ -27,7 +27,7 @@ class CoreInterface private constructor() {
     var starManager: StarManager? = null
 
     companion object {
-        val magBaseline = 100.0.pow(-0.2) // F_x / F_0 = magBaseline ** m_x
+        val magBaseline = (100.0).pow(-0.2) // F_x / F_0 = magBaseline ** m_x
 
         fun getCore(context: Context): CoreInterface {
             val core = CoreInterface()
@@ -131,7 +131,6 @@ class CoreInterface private constructor() {
     ): ImageView? {
         val renderedStar = ImageView(context)
         renderedStar.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.star))
-        setStarSize(renderedStar)
         val starPos =
             Vec2.fromXY(
                 star.position.x + r,
@@ -141,22 +140,25 @@ class CoreInterface private constructor() {
             return null
         }
         setStarColour(renderedStar, star)
-        renderedStar.translationX = (star.position.x + r - renderedStar.width / 2).toFloat()
-        renderedStar.translationY = (star.position.y + r - renderedStar.height / 2).toFloat()
+        renderedStar.translationX =
+            (star.position.x + r - renderedStar.drawable.intrinsicWidth / 2).toFloat()
+        renderedStar.translationY =
+            (star.position.y + r - renderedStar.drawable.intrinsicHeight / 2).toFloat()
         return renderedStar
     }
 
-    /**
-     * Set the size of the star ImageView.
-     * @param star The ImageView representing the star.
-     */
-    private fun setStarSize(star: ImageView) {
-        star.apply {
-            maxHeight = CoreConstants.STAR_RADIUS
-            maxWidth = CoreConstants.STAR_RADIUS
-            minimumHeight = CoreConstants.STAR_RADIUS
-            minimumWidth = CoreConstants.STAR_RADIUS
-        }
+    fun renderStarSelected(
+        context: Context,
+        star: ProjectedStar,
+        r: Double
+    ): ImageView {
+        val renderedRing = ImageView(context)
+        renderedRing.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.star_selected))
+        renderedRing.translationX =
+            (star.position.x + r - renderedRing.drawable.intrinsicWidth / 2).toFloat()
+        renderedRing.translationY =
+            (star.position.y + r - renderedRing.drawable.intrinsicHeight / 2).toFloat()
+        return renderedRing
     }
 
     /**
@@ -190,7 +192,7 @@ class CoreInterface private constructor() {
     private fun getOpacityFromFlux(flux: Double): Double {
         return min(
             1.0,
-            exp((flux / 2 - 1) * CoreConstants.FLUX_FACTOR)
+            exp((flux - 1) * CoreConstants.FLUX_FACTOR)
         )
     }
 
@@ -201,16 +203,16 @@ class CoreInterface private constructor() {
      */
     private fun setStarColour(renderedStar: ImageView, star: ProjectedStar) {
         val bV = StarUtils.getBV(star.star.star)
-        val fluxV = 1.0
-        val fluxB = magBaseline.pow(bV) * fluxV
+        val absFluxV = magBaseline.pow(starManager!!.getVMagnitude(star.star.star, star.star.level))
         val temp = TemperatureConverter.bVToTemperature(bV)
         val rgb = WavelengthConverter.calculateRGBFromTemperature(temp)
+        val op = getOpacityFromFlux(absFluxV).toFloat()
         val filter = ColorMatrix(
             floatArrayOf(
-                getOpacityFromFlux(fluxV + fluxB).toFloat(), 0f, 0f, 0f, rgb[0].toFloat(),
-                0f, getOpacityFromFlux(fluxV + fluxB).toFloat(), 0f, 0f, rgb[1].toFloat(),
-                0f, 0f, getOpacityFromFlux(fluxV + fluxB).toFloat(), 0f, rgb[2].toFloat(),
-                0f, 0f, 0f, getOpacityFromFlux(fluxV + fluxB).toFloat(), 0f
+                op, 0f, 0f, 0f, rgb[0].toFloat(),
+                0f, op, 0f, 0f, rgb[1].toFloat(),
+                0f, 0f, op, 0f, rgb[2].toFloat(),
+                0f, 0f, 0f, op, 0f
             )
         )
         renderedStar.colorFilter = ColorMatrixColorFilter(filter)

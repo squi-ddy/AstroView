@@ -1,4 +1,4 @@
-package com.example.astroview.api
+package com.example.astroview.api.data
 
 import com.google.gson.annotations.SerializedName
 

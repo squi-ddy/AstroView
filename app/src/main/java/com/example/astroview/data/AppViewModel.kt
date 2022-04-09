@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.astroview.starmap.astro.OrientationData
 import com.example.astroview.starmap.core.CoreConstants
 import com.example.astroview.starmap.core.CoreInterface
+import com.example.astroview.starmap.math.Vec2
 import com.example.astroview.starmap.stars.data.ProjectedStar
 import kotlin.collections.ArrayDeque
 
@@ -39,5 +40,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     val updateOrientation by lazy {
         MutableLiveData(true)
+    }
+
+    var centreVector = Vec2.fromXY(0, 0)
+
+    var savedUpdateOrientation = true
+
+    val selectedStar by lazy {
+        MutableLiveData<ProjectedStar?>(null)
     }
 }

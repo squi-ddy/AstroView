@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/your_account_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:textSize="40sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@+id/account_details"
+            android:layout_marginBottom="32dp" />
+
+    <TextView
+            android:text="@string/account_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/account_details"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toTopOf="@+id/logout_button"
+            android:layout_marginBottom="16dp" />
+
+    <Button
+            android:text="@string/logout_account_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logout_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/delete_button"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/account_details"
+            app:layout_constraintBottom_toTopOf="@+id/password_entry_account" />
+
+    <Button
+            android:text="@string/delete_account_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/logout_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="@+id/logout_button"
+            app:layout_constraintBottom_toBottomOf="@+id/logout_button" />
+
+    <CheckBox
+            android:text="@string/show_password_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/show_password_account"
+            app:layout_constraintTop_toBottomOf="@+id/password_entry_account"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/change_password_button"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp" />
+
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/password_entry_account"
+            app:layout_constraintTop_toBottomOf="@+id/logout_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/show_password_account"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:hint="@string/change_password_hint"
+            android:minHeight="48dp"
+            android:layout_marginTop="32dp" />
+
+    <Button
+            android:text="@string/change_password_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/change_password_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_password_account"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

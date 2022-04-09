@@ -1,6 +1,5 @@
 package com.example.astroview.api
 
-import com.example.pairworkpa.api.AstroViewAPI
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
@@ -11,5 +10,5 @@ object API {
         .addConverterFactory(GsonConverterFactory.create())
         .callbackExecutor(Executors.newSingleThreadExecutor())
         .build()
-    val client = caller.create(AstroViewAPI::class.java)
+    val client: AstroViewAPI = caller.create(AstroViewAPI::class.java)
 }

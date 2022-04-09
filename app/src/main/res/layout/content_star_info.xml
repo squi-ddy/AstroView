@@ -20,7 +20,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintBottom_toTopOf="@+id/magnitude"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp" />
 
         <TextView
                 android:layout_width="wrap_content"
@@ -57,22 +58,8 @@
                 android:text="@string/hipparcos_prompt"
                 android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintBottom_toTopOf="@+id/facts"
-                android:layout_marginBottom="8dp" />
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/facts"
-                app:layout_constraintTop_toBottomOf="@+id/hipparcos"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="very funny star"
-                android:textStyle="italic"
-                android:visibility="visible"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintBottom_toTopOf="@+id/textView9"
-                android:layout_marginBottom="32dp" />
+                android:layout_marginBottom="8dp" />
 
         <TextView
                 android:text="@string/comments_title"
@@ -80,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="italic"
-                app:layout_constraintTop_toBottomOf="@+id/facts"
+                app:layout_constraintTop_toBottomOf="@+id/hipparcos"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:id="@+id/textView9"
@@ -112,5 +99,6 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

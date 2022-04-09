@@ -7,15 +7,21 @@
     <string name="login_button">Login</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="your_account_title">Your Account</string>
-    <string name="account_details">Logged in as $1</string>
+    <string name="account_details">Logged in as %1$s</string>
     <string name="hipparcos_prompt">On the Hipparcos List</string>
     <string name="comments_title">Comments</string>
     <string name="add_comment_prompt">Add Comment</string>
     <string name="delete_account_prompt">Delete</string>
+    <string name="logout_account_prompt">Logout</string>
     <string name="menu_gyro_lock">Lock Stars</string>
     <string name="menu_user">Manage Account</string>
     <string name="permission_refused_message">We need location permissions in order to accurately display stars around you.</string>
     <string name="permission_refused_positive">OK</string>
     <string name="star_map_title">Star Map</string>
     <string name="star_map_north">N</string>
+    <string name="change_password_prompt">Change Password</string>
+    <string name="change_password_hint">New Password</string>
+    <string name="star_info_magnitude">V-Magnitude: %1$.2f</string>
+    <string name="star_info_bV">B-V: %1$.2f</string>
+    <string name="star_info_hipparcos">On the Hipparcos list, star number %1$d</string>
 </resources>

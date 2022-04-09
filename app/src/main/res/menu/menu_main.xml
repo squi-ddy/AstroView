@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context="com.example.astroview.ui.MainActivity">
+        tools:context="com.example.astroview.ui.main.MainActivity">
 
     <item
             android:id="@+id/menu_gyro_lock"

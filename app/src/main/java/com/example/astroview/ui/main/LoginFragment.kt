@@ -1,4 +1,4 @@
-package com.example.astroview.ui
+package com.example.astroview.ui.main
 
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.astroview.R
-import com.example.astroview.api.User
+import com.example.astroview.api.data.User
 import com.example.astroview.data.AppViewModel
 import com.example.astroview.databinding.FragmentLoginBinding
-import com.example.astroview.ui.util.hideKeyboard
-import com.example.pairworkpa.api.CallbackAction
+import com.example.astroview.api.CallbackAction
 import com.google.android.material.snackbar.Snackbar
+import com.example.astroview.ui.util.hideKeyboard
 
 
 class LoginFragment : Fragment() {
@@ -47,6 +47,16 @@ class LoginFragment : Fragment() {
 
             override fun onBadCode(result: String, code: Int): Boolean {
                 return when (code) {
+                    400 -> {
+                        activity?.runOnUiThread {
+                            Snackbar.make(
+                                v,
+                                if (result == "Invalid") result else "Invalid username",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+                        true
+                    }
                     401 -> {
                         activity?.runOnUiThread {
                             Snackbar.make(
@@ -75,6 +85,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (requireActivity() as MainActivity).fab?.hide()
         setHasOptionsMenu(true)
 
         binding.showPassword.setOnCheckedChangeListener { _, isChecked ->

@@ -1,4 +1,4 @@
-package com.example.pairworkpa.api
+package com.example.astroview.api
 
 import java.io.IOException
 

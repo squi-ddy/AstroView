@@ -4,20 +4,21 @@ import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.astroview.api.API
-import com.example.astroview.api.User
-import com.example.astroview.api.UserPassword
+import com.example.astroview.api.data.User
+import com.example.astroview.api.data.UserPassword
 import com.example.astroview.api.handleReturn
-import com.example.pairworkpa.api.CallbackAction
+import com.example.astroview.api.CallbackAction
 import java.io.IOException
 
 class Credentials {
-    private val userInternal = MutableLiveData<FullUser?>(null)
-    val user get() = userInternal as LiveData<FullUser?>
+    private val _user = MutableLiveData<FullUser?>(null)
+    val user get() = _user as LiveData<FullUser?>
 
     // Convenience methods
-    val username get() = userInternal.value?.username
-    val auth get() = userInternal.value?.auth
-    val password get() = userInternal.value?.password
+    val loggedIn get() = (_user.value != null)
+    val username get() = _user.value?.username
+    val auth get() = _user.value?.auth
+    val password get() = _user.value?.password
 
     fun login(name: String, pass: String, whenDone: CallbackAction<User>) {
         val toEncode = "${name}:${pass}"
@@ -96,7 +97,7 @@ class Credentials {
             })
     }
 
-    fun modify(password: String, add: Int, whenDone: CallbackAction<User>) {
+    fun modify(password: String, whenDone: CallbackAction<User>) {
         API.client.modifyUser(username ?: "", UserPassword(password), auth ?: "")
             .handleReturn(object : CallbackAction<User> {
                 override fun onSuccess(result: User, code: Int) {
@@ -136,7 +137,7 @@ class Credentials {
         password: String?,
         auth: String?
     ): Boolean {
-        userInternal.postValue(
+        _user.postValue(
             FullUser(
                 username ?: return false,
                 password ?: return false,
@@ -147,6 +148,6 @@ class Credentials {
     }
 
     fun logout() {
-        userInternal.postValue(null)
+        _user.postValue(null)
     }
 }

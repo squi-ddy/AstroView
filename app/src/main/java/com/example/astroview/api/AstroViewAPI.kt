@@ -1,7 +1,6 @@
-package com.example.pairworkpa.api
+package com.example.astroview.api
 
-import com.example.astroview.api.User
-import com.example.astroview.api.UserPassword
+import com.example.astroview.api.data.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,14 +12,35 @@ interface AstroViewAPI {
     fun addUser(@Path("name") username: String, @Body body: UserPassword): Call<User>
 
     @PATCH("users/{name}/")
-    fun modifyUser(@Path("name") username: String, @Body body: UserPassword, @Header("Authorization") auth: String): Call<User>
+    fun modifyUser(
+        @Path("name") username: String,
+        @Body body: UserPassword,
+        @Header("Authorization") auth: String
+    ): Call<User>
 
     @DELETE("users/{name}/")
-    fun deleteUser(@Path("name") username: String, @Header("Authorization") auth: String): Call<Unit>
+    fun deleteUser(
+        @Path("name") username: String,
+        @Header("Authorization") auth: String
+    ): Call<Unit>
 
-    /*@GET("products/{id}/ratings/")
-    fun getReviews(@Path("id") productId: String): Call<ProductReviews>
+    @GET("stars/{id}/ratings/")
+    fun getStarReviews(@Path("id") star: Int): Call<List<StarReview>>
 
-    @POST("products/{id}/ratings/")
-    fun postReview(@Path("id") productId: String, @Header("Authorization") auth: String, @Body body: CreatedReview): Call<Review>*/
+    @POST("stars/{id}/ratings/")
+    fun postStarReview(
+        @Path("id") star: Int,
+        @Header("Authorization") auth: String,
+        @Body body: UserReview
+    ): Call<StarReview>
+
+    @GET("pages/{id}/ratings/")
+    fun getPageReviews(@Path("id") page: String): Call<List<PageReview>>
+
+    @POST("pages/{id}/ratings/")
+    fun postPageReview(
+        @Path("id") page: String,
+        @Header("Authorization") auth: String,
+        @Body body: UserReview
+    ): Call<PageReview>
 }
