@@ -11,4 +11,6 @@ object API {
         .callbackExecutor(Executors.newSingleThreadExecutor())
         .build()
     val client: AstroViewAPI = caller.create(AstroViewAPI::class.java)
+
+    fun getDownloadMarkdownLink(page: Int) = "https://astroview.squiddy.me/pages/number/${page}/link"
 }

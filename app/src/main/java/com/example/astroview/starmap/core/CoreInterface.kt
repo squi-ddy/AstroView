@@ -212,7 +212,7 @@ class CoreInterface private constructor() {
                 op, 0f, 0f, 0f, rgb[0].toFloat(),
                 0f, op, 0f, 0f, rgb[1].toFloat(),
                 0f, 0f, op, 0f, rgb[2].toFloat(),
-                0f, 0f, 0f, op, 0f
+                0f, 0f, 0f, op * 1.2f, 0f
             )
         )
         renderedStar.colorFilter = ColorMatrixColorFilter(filter)

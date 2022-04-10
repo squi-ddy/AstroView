@@ -3,6 +3,7 @@ package com.example.astroview.ui.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Matrix
 import android.graphics.Rect
@@ -21,11 +22,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.astroview.R
 import com.example.astroview.api.API
 import com.example.astroview.api.CallbackAction
 import com.example.astroview.api.data.StarReview
+import com.example.astroview.api.data.UserReview
 import com.example.astroview.api.handleReturn
 import com.example.astroview.data.AppViewModel
 import com.example.astroview.databinding.FragmentStarCanvasBinding
@@ -38,8 +41,6 @@ import com.example.astroview.starmap.stars.data.ProjectedStar
 import com.example.astroview.ui.main.adapters.StarCommentAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.otaliastudios.zoom.ZoomEngine
-import java.io.IOException
-import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -98,7 +99,7 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
 
         })
 
-        binding.canvasContainer.addOnLayoutChangeListener {_, _, _, _, _, _, _, _, _ ->
+        binding.canvasContainer.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             val offsetViewBounds = Rect()
             binding.circleBackground.getDrawingRect(offsetViewBounds)
             binding.canvasContainer.offsetDescendantRectToMyCoords(
@@ -187,6 +188,66 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
             Log.e("sus", "pressed")
             viewModel.selectedStar.value = null
         }
+
+        binding.starInfoContent.comments.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.starInfoContent.commentButton.setOnClickListener {
+            val content = binding.starInfoContent.commentTextEntry.text.toString()
+            if (content.isBlank()) {
+                Snackbar.make(
+                    binding.root,
+                    "Enter some content!",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            } else {
+                val star = viewModel.selectedStar.value!!
+                val auth = viewModel.credentials.auth
+                if (auth == null) {
+                    Snackbar.make(
+                        binding.root,
+                        "Please log in first!",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+                API.client.postStarReview(star.star.star.hashCode(), auth, UserReview(content))
+                    .handleReturn(object :
+                        CallbackAction<StarReview> {
+                        override fun onSuccess(result: StarReview, code: Int) {
+                            Snackbar.make(
+                                binding.root,
+                                "Comment posted!",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+
+                            val t = this
+
+                            API.client.getStarReviews(star.star.star.hashCode())
+                                .handleReturn(object :
+                                    CallbackAction<List<StarReview>> {
+                                    override fun onSuccess(result: List<StarReview>, code: Int) {
+                                        requireActivity().runOnUiThread {
+                                            binding.starInfoContent.comments.adapter =
+                                                StarCommentAdapter(result)
+                                        }
+                                    }
+
+                                    override fun onFailure(error: Throwable) {
+                                        t.onFailure(error)
+                                    }
+                                })
+                        }
+
+                        override fun onFailure(error: Throwable) {
+                            Snackbar.make(
+                                binding.root,
+                                "Network error. Try again later.",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+            }
+        }
     }
 
     private fun permissionGranted(permission: String): Boolean {
@@ -246,12 +307,12 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
             )
             infoBinding.hipparcos.text = getString(R.string.star_info_hipparcos, hipIndex)
 
-            infoBinding.comments.layoutManager = LinearLayoutManager(requireContext())
-
             API.client.getStarReviews(star.star.star.hashCode()).handleReturn(object :
                 CallbackAction<List<StarReview>> {
                 override fun onSuccess(result: List<StarReview>, code: Int) {
-                    infoBinding.comments.adapter = StarCommentAdapter(result)
+                    requireActivity().runOnUiThread {
+                        infoBinding.comments.adapter = StarCommentAdapter(result)
+                    }
                 }
 
                 override fun onFailure(error: Throwable) {
@@ -416,6 +477,15 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
                 R.drawable.ic_baseline_screen_rotation_24
             )
         }
+
+        val help = menu.findItem(R.id.menu_help)
+        help.isVisible = true
+
+        val share = menu.findItem(R.id.menu_share)
+        share.isVisible = (viewModel.selectedStar.value != null)
+
+        val download = menu.findItem(R.id.menu_download)
+        download.isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -434,6 +504,24 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
                             R.drawable.ic_baseline_screen_rotation_24
                         )
                 }
+                true
+            }
+            R.id.menu_help -> {
+                findNavController().navigate(R.id.action_starCanvasFragment_to_helpPageSelectorFragment)
+                true
+            }
+            R.id.menu_share -> {
+                val star = viewModel.selectedStar.value!!
+                val hipIndex = StarUtils.getHipparcosIndex(star.star.star)
+                val hipparcosStar =
+                    viewModel.core.starManager!!.getHipparcosStar(hipIndex)
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, "Hey! I'm currently looking at ${hipparcosStar?.name ?: "Unnamed Star"} on AstroView! Come join me!")
+                }
+                startActivity(Intent.createChooser(intent, "Share via"))
+
                 true
             }
             else -> super.onOptionsItemSelected(item)

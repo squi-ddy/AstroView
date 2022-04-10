@@ -10,4 +10,22 @@
             android:icon="@drawable/ic_baseline_screen_lock_rotation_24"
             android:title="@string/menu_gyro_lock"/>
 
+    <item
+            android:id="@+id/menu_help"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_baseline_help_24"
+            android:title="@string/menu_help"/>
+
+    <item
+            android:id="@+id/menu_share"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_baseline_share_24"
+            android:title="@string/menu_share"/>
+
+    <item
+            android:id="@+id/menu_download"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_baseline_download_24"
+            android:title="@string/menu_download"/>
+
 </menu>

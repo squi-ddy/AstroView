@@ -7,24 +7,41 @@
         <entry key="app/src/main/res/drawable-v24/theme_border.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/border.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/circle_border.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/help.xml" value="0.203" />
+        <entry key="app/src/main/res/drawable/ic_baseline_download_24.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/ic_gradient.xml" value="0.2825" />
+        <entry key="app/src/main/res/drawable/recycler_view_closed.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/star.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/star_selected.xml" value="0.203" />
         <entry key="app/src/main/res/drawable/star_test.xml" value="0.2825" />
+        <entry key="app/src/main/res/layout-w1240dp/card_help.xml" value="0.5" />
+        <entry key="app/src/main/res/layout-w1240dp/card_help_inner.xml" value="0.67" />
+        <entry key="app/src/main/res/layout-w1240dp/onboard_first.xml" value="0.25510204081632654" />
+        <entry key="app/src/main/res/layout-w1240dp/onboard_third.xml" value="0.286328125" />
+        <entry key="app/src/main/res/layout-w1240dp/onboarding_main.xml" value="0.25510204081632654" />
         <entry key="app/src/main/res/layout-w936dp/card_review.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_info.xml" value="0.1953125" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/card_help.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/card_help_inner.xml" value="0.5" />
         <entry key="app/src/main/res/layout/card_review.xml" value="0.75" />
         <entry key="app/src/main/res/layout/content_info.xml" value="0.1953125" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout/content_star_info.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_account_info.xml" value="0.390625" />
-        <entry key="app/src/main/res/layout/fragment_help_page.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout/fragment_help_page.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/fragment_help_page_selector.xml" value="0.1953125" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.1953125" />
         <entry key="app/src/main/res/layout/fragment_star_canvas.xml" value="0.2856054836252856" />
         <entry key="app/src/main/res/layout/fragment_star_info.xml" value="0.390625" />
+        <entry key="app/src/main/res/layout/onboard_first.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout/onboard_second.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/onboard_third.xml" value="0.1953125" />
+        <entry key="app/src/main/res/layout/onboarding_main.xml" value="0.1953125" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.375" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.203" />
       </map>
     </option>
   </component>

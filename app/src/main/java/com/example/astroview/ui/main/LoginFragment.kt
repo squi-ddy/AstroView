@@ -152,6 +152,15 @@ class LoginFragment : Fragment() {
 
         val lockGyro = menu.findItem(R.id.menu_gyro_lock)
         lockGyro.isVisible = false
+
+        val help = menu.findItem(R.id.menu_help)
+        help.isVisible = false
+
+        val share = menu.findItem(R.id.menu_share)
+        share.isVisible = false
+
+        val download = menu.findItem(R.id.menu_download)
+        download.isVisible = false
     }
 
     override fun onDestroyView() {

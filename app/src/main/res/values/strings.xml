@@ -24,4 +24,18 @@
     <string name="star_info_magnitude">V-Magnitude: %1$.2f</string>
     <string name="star_info_bV">B-V: %1$.2f</string>
     <string name="star_info_hipparcos">On the Hipparcos list, star number %1$d</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_share" />
+    <string name="menu_download">Download File</string>
+    <string name="channel_name">AstroView</string>
+    <string name="channel_description">AstroView notifications</string>
+    <string name="enter_comment_prompt">Enter comment…</string>
+    <string name="OBTitle">Welcome to AstroView!</string>
+    <string name="OBPg1">The solution for all your Astronomy needs!</string>
+    <string name="OBFeatures">Star Map</string>
+    <string name="OBPg2">Rotate your phone to view the stars!\n\nUse the buttons in the top right to:\n- Stop sensor input\n- View help pages</string>
+    <string name="OBPg4">Have Fun!</string>
+    <string name="start">Start App!</string>
+    <string name="OBFeatures2">Star Info</string>
+    <string name="OBPg3">View information about stars by zooming in!\nComment and view on other people\'s comments, and interact with others!</string>
 </resources>

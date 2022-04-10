@@ -1,6 +1,7 @@
 package com.example.astroview.api
 
 import com.example.astroview.api.data.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -35,12 +36,18 @@ interface AstroViewAPI {
     ): Call<StarReview>
 
     @GET("pages/{id}/ratings/")
-    fun getPageReviews(@Path("id") page: String): Call<List<PageReview>>
+    fun getPageReviews(@Path("id") page: Int): Call<List<PageReview>>
 
     @POST("pages/{id}/ratings/")
     fun postPageReview(
-        @Path("id") page: String,
+        @Path("id") page: Int,
         @Header("Authorization") auth: String,
         @Body body: UserReview
     ): Call<PageReview>
+
+    @GET("pages/")
+    fun getPages(): Call<Map<String, List<HelpPage>>>
+
+    @GET("pages/number/{id}/link")
+    fun downloadMarkdown(@Path("id") page: Int): Call<ResponseBody>
 }

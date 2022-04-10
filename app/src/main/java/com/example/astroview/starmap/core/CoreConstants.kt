@@ -8,5 +8,5 @@ object CoreConstants {
     const val INTERPOLATE_SIZE = 10
     const val NORTH_DISTANCE = 25
     const val NORTH_TEXT_SIZE = 15
-    const val FLUX_FACTOR = 1.4
+    const val FLUX_FACTOR = 1
 }

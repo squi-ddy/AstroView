@@ -1,10 +1,11 @@
 package com.example.astroview.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.navigation.findNavController
@@ -18,6 +19,7 @@ import com.example.astroview.api.CallbackAction
 import com.example.astroview.api.data.User
 import com.example.astroview.data.AppViewModel
 import com.example.astroview.databinding.ActivityMainBinding
+import com.example.astroview.ui.onboarding.OnBoardingActivity
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +32,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val prefs = getSharedPreferences("com.example.astroview", Context.MODE_PRIVATE)
+        val firstTime = prefs.getBoolean("firstTime", true)
+        if (firstTime) {
+            val intent = Intent(this, OnBoardingActivity::class.java)
+            startActivity(intent)
+            return
+        }
+
+        setDefaultNightMode(MODE_NIGHT_YES)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -38,8 +51,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        setDefaultNightMode(MODE_NIGHT_YES)
 
         binding.fab.setOnClickListener {
             if (!viewModel.credentials.loggedIn)
