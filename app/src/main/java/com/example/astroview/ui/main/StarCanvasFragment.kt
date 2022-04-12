@@ -42,6 +42,7 @@ import com.example.astroview.ui.main.adapters.StarCommentAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.otaliastudios.zoom.ZoomEngine
 import kotlin.concurrent.thread
+import kotlin.math.absoluteValue
 
 
 class StarCanvasFragment : Fragment(), SensorEventListener {
@@ -210,7 +211,7 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
                     ).show()
                     return@setOnClickListener
                 }
-                API.client.postStarReview(star.star.star.hashCode(), auth, UserReview(content))
+                API.client.postStarReview(star.star.star.hashCode().absoluteValue, auth, UserReview(content))
                     .handleReturn(object :
                         CallbackAction<StarReview> {
                         override fun onSuccess(result: StarReview, code: Int) {
@@ -222,7 +223,7 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
 
                             val t = this
 
-                            API.client.getStarReviews(star.star.star.hashCode())
+                            API.client.getStarReviews(star.star.star.hashCode().absoluteValue)
                                 .handleReturn(object :
                                     CallbackAction<List<StarReview>> {
                                     override fun onSuccess(result: List<StarReview>, code: Int) {
@@ -307,7 +308,7 @@ class StarCanvasFragment : Fragment(), SensorEventListener {
             )
             infoBinding.hipparcos.text = getString(R.string.star_info_hipparcos, hipIndex)
 
-            API.client.getStarReviews(star.star.star.hashCode()).handleReturn(object :
+            API.client.getStarReviews(star.star.star.hashCode().absoluteValue).handleReturn(object :
                 CallbackAction<List<StarReview>> {
                 override fun onSuccess(result: List<StarReview>, code: Int) {
                     requireActivity().runOnUiThread {

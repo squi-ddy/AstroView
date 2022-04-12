@@ -19,4 +19,14 @@ abstract class Star(val bytes: ByteArray) {
     abstract fun getBVIndex(): Int
 
     abstract fun getJ2kPos(z: ZoneData, movementFactor: Double): Vec3
+
+    override fun hashCode(): Int {
+        return bytes.contentHashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Star) return false
+
+        return other.bytes.contentEquals(this.bytes)
+    }
 }
