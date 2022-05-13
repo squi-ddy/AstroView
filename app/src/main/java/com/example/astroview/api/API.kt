@@ -6,11 +6,11 @@ import java.util.concurrent.Executors
 
 object API {
     private val caller = Retrofit.Builder()
-        .baseUrl("https://astroview.squiddy.me/")
+        .baseUrl("https://api.squiddy.me/astroview/")
         .addConverterFactory(GsonConverterFactory.create())
         .callbackExecutor(Executors.newSingleThreadExecutor())
         .build()
     val client: AstroViewAPI = caller.create(AstroViewAPI::class.java)
 
-    fun getDownloadMarkdownLink(page: Int) = "https://astroview.squiddy.me/pages/number/${page}/link"
+    fun getDownloadMarkdownLink(page: Int) = "https://api.squiddy.me/astroview/pages/number/${page}/link"
 }
